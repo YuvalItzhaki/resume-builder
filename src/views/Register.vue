@@ -77,7 +77,7 @@
   
   const register = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/api/users/register', {
+      const response = await axios.post('http://localhost:5001/api/users/register', {
         email: email.value,
         password: password.value
       });
@@ -92,7 +92,7 @@
   };
   
   const registerWithGoogle = () => {
-    window.location.href = 'http://localhost:5000/auth/google';
+    window.location.href = 'http://localhost:5001/api/auth/google';
   };
   </script>
   
