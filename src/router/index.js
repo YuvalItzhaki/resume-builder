@@ -7,7 +7,7 @@ import CreateResume from '../views/CreateResume.vue'
 
 const routes = [
   {
-    path: '/',
+    path: '/dashboard',
     name: 'Dashboard',
     component: Dashboard,
   },
