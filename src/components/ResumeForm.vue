@@ -1,60 +1,36 @@
 <!-- src/components/ResumeForm.vue -->
-<script setup>
-  import { reactive } from 'vue';
-  import { useResumeStore } from '../stores/resume.js';
-  
-  const resumeStore = useResumeStore();
-  const resumeData = reactive({
-    name: '',
-    email: '',
-    phone: '',
-    location: '',
-    // Add more fields as needed
-  });
-  
-  const handleSubmit = () => {
-    resumeStore.saveResume(resumeData);
-  };
-</script>
-
 <template>
-  <v-form @submit.prevent="handleSubmit">
-    <v-row>
-      <v-col cols="12" sm="6">
-        <v-text-field
-          v-model="resumeData.name"
-          label="Name"
-          required
-        ></v-text-field>
-      </v-col>
-      <v-col cols="12" sm="6">
-        <v-text-field
-          v-model="resumeData.email"
-          label="Email"
-          required
-        ></v-text-field>
-      </v-col>
-      <v-col cols="12" sm="6">
-        <v-text-field
-          v-model="resumeData.phone"
-          label="Phone"
-          required
-        ></v-text-field>
-      </v-col>
-      <v-col cols="12" sm="6">
-        <v-text-field
-          v-model="resumeData.location"
-          label="Location"
-          required
-        ></v-text-field>
-      </v-col>
-      <!-- Add more fields as needed -->
-      <v-col cols="12">
-        <v-btn type="submit" color="primary">Save Resume</v-btn>
-      </v-col>
-    </v-row>
-  </v-form>
+  <form @submit.prevent="handleSubmit">
+    <div>
+      <label for="name">Name:</label>
+      <input id="name" v-model="formData.name" type="text" required />
+    </div>
+    <div>
+      <label for="email">Email:</label>
+      <input id="email" v-model="formData.email" type="email" required />
+    </div>
+    <!-- Add other form fields as needed -->
+    <button type="submit">Submit</button>
+  </form>
 </template>
 
+<script setup>
+import { ref } from 'vue';
+import { defineEmits } from 'vue';
+
+const emit = defineEmits(['submit']);
+const formData = ref({
+  name: '',
+  email: '',
+  // Add other form fields as needed
+});
+
+const handleSubmit = () => {
+  console.log('Form submitted:', formData.value);
+  emit('submit', formData.value);
+};
+</script>
+
 <style scoped>
+/* Add your styles here */
 </style>

@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Dashboard from '../views/Dashboard.vue';
 import Login from '../views/Login.vue';
 import Register from '../views/Register.vue';
+import CreateResume from '../views/CreateResume.vue'
 
 const routes = [
   {
@@ -19,6 +20,11 @@ const routes = [
     path: '/register',
     name: 'Register',
     component: Register,
+  },
+  {
+    path: '/create-resume',
+    name: 'CreateResume',
+    component: CreateResume,
   },
 ];
 
