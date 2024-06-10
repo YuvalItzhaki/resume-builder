@@ -9,6 +9,14 @@
       <label for="email">Email:</label>
       <input id="email" v-model="formData.email" type="email" required />
     </div>
+    <div>
+      <label for="title">Title:</label>
+      <input id="title" v-model="formData.title" type="title" required />
+    </div>
+    <div>
+      <label for="description">Description:</label>
+      <input id="description" v-model="formData.description" type="description" required />
+    </div>
     <!-- Add other form fields as needed -->
     <button type="submit">Submit</button>
   </form>
@@ -22,7 +30,8 @@ const emit = defineEmits(['submit']);
 const formData = ref({
   name: '',
   email: '',
-  // Add other form fields as needed
+  title: '',
+  description: '',
 });
 
 const handleSubmit = () => {
