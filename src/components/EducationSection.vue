@@ -1,17 +1,30 @@
 <template>
-    <div class="education-section">
-      <h2>Education</h2>
-      <ul>
-        <li v-for="edu in education" :key="edu.degree">{{ edu.institution }} - {{ edu.degree }}</li>
-      </ul>
-    </div>
-  </template>
+  <div class="education-section">
+    <h2>Education</h2>
+    <ul>
+      <li v-for="edu in education" :key="edu.degree" class="education-item">
+        <div class="institution-degree">
+          <strong>{{ edu.institution }}</strong> - {{ edu.degree }}
+        </div>
+        <div class="dates">
+          <span>{{ edu.startDate }}</span> - <span>{{ edu.endDate }}</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+</template>
+
   
   <script setup>
     import { ref, onMounted } from 'vue';
     import axios from 'axios';
 
-    const education = ref([]);
+    const education = ref({
+      institution: '',
+      degree: '',
+      startDate: '',
+      endDate: ''
+    });
 
     onMounted(async () => {
     try {
