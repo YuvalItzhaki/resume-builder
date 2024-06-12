@@ -24,11 +24,13 @@ import ResumePreview from '../components/ResumePreview.vue';
     <div>
       <h1>Dashboard</h1>
       <button @click="navigateToCreateResume">Create New Resume</button>
+      <div><ResumeTestTemplate /></div>
     </div>
   </template>
   
   <script setup>
   import { useRouter } from 'vue-router';
+  import ResumeTestTemplate from '../components/ResumeTestTemplate.vue'
   
   const router = useRouter();
   
