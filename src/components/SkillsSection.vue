@@ -1,6 +1,6 @@
 <template>
     <div class="skills-section">
-      <h2>Tech Skills</h2>
+      <h2>TECH SKILLS</h2>
       <ul>
         <li v-for="skill in tech_skills" :key="skill">{{ skill }}</li>
       </ul>
@@ -39,12 +39,20 @@
   </script>
   
   <style scoped>
-  .skills-section h2 {
-    background-color: #00796b;
-    color: white;
-    padding: 5px;
-    margin: 0 -20px;
-    text-align: center;
+  .skills-section {
+    font-family: 'Times New Roman', Times, serif;
   }
+  .skills-section h2 {
+    color: #073763;
+    padding: 4px;
+    text-align: left;
+    border-radius: 2px 2px 0 0;
+  }
+
+  .skills-section ul {
+    margin: 5px 0;
+    padding-left: 20px;
+  }
+
   </style>
   

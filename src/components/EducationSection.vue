@@ -1,6 +1,6 @@
 <template>
   <div class="education-section">
-    <h2>Education</h2>
+    <h2>EDUCATION</h2>
     <ul>
       <li v-for="edu in education" :key="edu.degree" class="education-item">
         <div class="institution-degree">
@@ -44,12 +44,18 @@
   </script>
   
   <style scoped>
+    .education-section {
+    font-family: 'Times New Roman', Times, serif;
+  }
   .education-section h2 {
-    background-color: #00796b;
-    color: white;
-    padding: 5px;
-    margin: 0 -20px;
-    text-align: center;
+    color: #073763;
+    padding: 4px;
+    text-align: left;
+    border-radius: 2px 2px 0 0;
+  }
+  .education-section ul {
+    margin: 5px 0;
+    padding-left: 20px;
   }
   </style>
   

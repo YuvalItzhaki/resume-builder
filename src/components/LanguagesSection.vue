@@ -1,6 +1,6 @@
 <template>
     <div class="languages-section">
-      <h2>Languages</h2>
+      <h2>LANGUAGES</h2>
       <ul>
         <li v-for="language in languages" :key="language">{{ language }}</li>
       </ul>
@@ -29,12 +29,19 @@ onMounted(async () => {
   </script>
   
   <style scoped>
+    .languages-section {
+    font-family: 'Times New Roman', Times, serif;
+  }
   .languages-section h2 {
-    background-color: #00796b;
-    color: white;
-    padding: 5px;
-    margin: 0 -20px;
-    text-align: center;
+    color: #073763;
+    padding: 4px;
+    text-align: left;
+    border-radius: 2px 2px 0 0;
+    font-family: 'Times New Roman', Times, serif;
+  }
+  .languages-section ul {
+    margin: 5px 0;
+    padding-left: 20px;
   }
   </style>
   

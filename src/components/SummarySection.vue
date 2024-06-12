@@ -1,6 +1,6 @@
 <template>
     <div class="summary-section">
-      <h2>Profile</h2>
+      <h2>PROFILE</h2>
       <p>{{ profile }}</p>
     </div>
   </template>
@@ -29,6 +29,7 @@ import { ref, onMounted } from 'vue';
   <style scoped>
   .summary-section {
     margin-bottom: 20px;
+    font-family: 'Times New Roman', Times, serif;
   }
   </style>
   

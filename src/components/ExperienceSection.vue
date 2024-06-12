@@ -1,6 +1,6 @@
 <template>
     <div class="experience-section">
-      <h2>Experience</h2>
+      <h2>EXPERIENCE</h2>
       <div v-for="job in experience" :key="job.title" class="job">
         <h3>{{ job.title }}</h3>
         <p>{{ job.company }} | {{ job.startDate }} - {{ job.endDate }}</p>
@@ -56,6 +56,7 @@ onMounted(async () => {
   <style scoped>
   .experience-section {
     margin-top: 20px;
+    font-family: 'Times New Roman', Times, serif;
   }
   
   .job p, .job h3 {

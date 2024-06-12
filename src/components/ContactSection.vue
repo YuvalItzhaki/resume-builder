@@ -1,6 +1,6 @@
 <template>
   <div class="contact-section">
-    <h2>Contact</h2>
+    <h2>CONTACT</h2>
     <p><strong>Email:</strong> <a :href="'mailto:' + contact.email">{{ contact.email }}</a></p>
     <p><strong>Phone:</strong> {{ contact.phone }}</p>
     <p><strong>LinkedIn:</strong> <a :href="contact.linkedin">{{ contact.linkedin }}</a></p>
@@ -32,22 +32,22 @@ onMounted(async () => {
 
 <style scoped>
 .contact-section {
-  padding: 20px;
+  padding: 2px;
   background-color: #f9f9f9;
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+  font-family: 'Times New Roman', Times, serif;
+  /* box-shadow: 0 8px 4px rgba(0, 0, 0, 0.1); */
 }
 
 .contact-section h2 {
-  background-color: #00796b;
-  color: white;
-  padding: 10px;
-  text-align: center;
-  border-radius: 5px 5px 0 0;
+  color: #073763;
+  padding: 4px;
+  text-align: left;
+  border-radius: 2px 2px 0 0;
 }
 
 .contact-section p {
-  margin: 10px 0;
+  margin: 5px 0;
 }
 
 .contact-section a {
