@@ -32,7 +32,16 @@
       </fieldset>
       <div class="form-group">
         <label for="tech_skills">Tech Skills:</label>
-        <input id="tech_skills" v-model="formData.tech_skills" type="text" required />
+        <v-select 
+          v-model="formData.tech_skills" 
+          :options="techSkillsOptions" 
+          multiple 
+          label="label" 
+          placeholder="Select tech skills" 
+          :reduce="skill => skill.value"
+          style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;"
+        />
+        <!-- <input id="tech_skills" v-model="formData.tech_skills" type="text" required /> -->
       </div>
       <div class="form-group">
         <label for="languages">Languages:</label>
@@ -100,6 +109,24 @@
 <script setup>
 import { ref } from 'vue';
 import { defineEmits } from 'vue';
+// import { VueSelect } from "vue-select";
+// import "vue-select/dist/vue-select.css";
+import vSelect from 'vue-select';
+import 'vue-select/dist/vue-select.css';
+
+const techSkillsOptions = [
+  { value: 'Python', label: 'Python' },
+  { value: 'Java', label: 'Java' },
+  { value: 'Vue3.js', label: 'Vue3.js' },
+  { value: 'JavaScript', label: 'JavaScript' },
+  { value: 'Node.js', label: 'Node.js' },
+  { value: 'BullMQ', label: 'BullMQ' },
+  { value: 'MongoDB', label: 'MongoDB' },
+  { value: 'MySQL', label: 'MySQL' },
+  { value: 'Docker', label: 'Docker' },
+  { value: 'Linux', label: 'Linux' },
+  { value: 'AWS', label: 'AWS' },
+];
 
 const emit = defineEmits(['submit']);
 const formData = ref({
@@ -112,8 +139,8 @@ const formData = ref({
     linkedin: '',
     github: ''
   },
-  tech_skills: '',
-  languages: '',
+  tech_skills: [],
+  languages: [],
   education: [
     {
       institution: '',

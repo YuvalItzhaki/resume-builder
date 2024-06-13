@@ -53,6 +53,10 @@
     margin: 5px 0;
     padding-left: 20px;
   }
+  .skills-section li {
+    list-style-type: disc; /* Ensure list items use bullets */
+    margin-bottom: 5px; /* Space between each list item */
+}
 
   </style>
   

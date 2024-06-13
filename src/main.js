@@ -5,8 +5,10 @@ import { createPinia } from 'pinia';
 import vuetify from './plugins/vuetify';
 import router from './router/index';
 import ElementPlus from 'element-plus';
+import VueSelect from 'vue-select';
 
 const app = createApp(App);
+app.component("v-select", VueSelect)
 
 app.use(createPinia());
 app.use(vuetify);

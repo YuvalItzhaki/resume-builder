@@ -2,7 +2,7 @@
     <div class="profile-section">
       <!-- <img src="path/to/profile-picture.jpg" alt="Profile Picture" class="profile-pic"/> -->
       <h1>{{ name }}</h1>
-      <p>{{ profession }}</p>
+      <p>{{ title }}</p>
     </div>
   </template>
   
@@ -10,20 +10,20 @@
     import { ref, onMounted } from 'vue';
     import axios from 'axios';
 
-    const name = ref([]);
+    const name = ref();
+    const title = ref();
+
 
     onMounted(async () => {
     try {
         const response = await axios.get('http://localhost:5001/api/resumes');
         name.value = response.data.name.toUpperCase();
+        title.value = response.data.title.toUpperCase();
+
     } catch (error) {
         console.error('Error fetching resume data:', error);
     }
     });
-//   import { ref } from 'vue';
-
-//     const name = ref('YUVAL ITZHAKI');
-//     const profession = ref('SOFTWARE ENGINEER');
   </script>
   
   <style scoped>
