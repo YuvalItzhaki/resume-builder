@@ -1,10 +1,26 @@
 <template>
   <div class="contact-section">
     <h2>CONTACT</h2>
-    <p><strong>Email:</strong> <a :href="'mailto:' + contact.email">{{ contact.email }}</a></p>
-    <p><strong>Phone:</strong> {{ contact.phone }}</p>
-    <p><strong>LinkedIn:</strong> <a :href="contact.linkedin">{{ contact.linkedin }}</a></p>
-    <p><strong>GitHub:</strong> <a :href="contact.github">{{ contact.github }}</a></p>
+    <p>
+      <label for="contact-email">
+        <font-awesome-icon icon="envelope" /> <a :href="'mailto:' + contact.email">{{ contact.email }}</a>
+      </label>
+    </p>
+    <p>
+      <label for="contact-phone">
+        <font-awesome-icon icon="phone" /> {{ contact.phone }}
+      </label>
+    </p>
+    <p>
+      <label for="contact-linkedin">
+        <font-awesome-icon :icon="['fab', 'linkedin']" /> <a :href="contact.linkedin" target="_blank"> LinkedIn</a>
+      </label>
+    </p>
+    <p>
+      <label for="contact-github">
+        <font-awesome-icon :icon="['fab', 'github']" /> <a :href="contact.github" target="_blank"> GitHub</a>
+      </label>
+    </p>
   </div>
 </template>
 

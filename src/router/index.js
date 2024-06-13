@@ -3,7 +3,9 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Dashboard from '../views/Dashboard.vue';
 import Login from '../views/Login.vue';
 import Register from '../views/Register.vue';
-import CreateResume from '../views/CreateResume.vue'
+import CreateResume from '../views/CreateResume.vue';
+import ResumePreview from '../views/ResumePreview.vue'
+
 
 const routes = [
   {
@@ -26,6 +28,11 @@ const routes = [
     name: 'CreateResume',
     component: CreateResume,
   },
+  {
+    path: '/resume-preview',
+    name: 'ResumePreview',
+    component: ResumePreview,
+},
 ];
 
 const router = createRouter({

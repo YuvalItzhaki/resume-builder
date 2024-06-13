@@ -60,7 +60,9 @@ onMounted(async () => {
   }
   
   .job p, .job h3 {
+    font-family: 'Times New Roman', Times, serif;
     margin: 0;
+    color: #6c99e1;
   }
   
   .job ul {

@@ -61,7 +61,9 @@
   }
   
   p {
-    color: #666;
+    font-size: 18px;
+    color: white;
+    font-family: 'Times New Roman', Times, serif;
   }
   </style>
   

@@ -113,7 +113,9 @@ import { defineEmits } from 'vue';
 // import "vue-select/dist/vue-select.css";
 import vSelect from 'vue-select';
 import 'vue-select/dist/vue-select.css';
-
+import { useRouter } from 'vue-router';
+  
+const router = useRouter();
 const techSkillsOptions = [
   { value: 'Python', label: 'Python' },
   { value: 'Java', label: 'Java' },
@@ -163,6 +165,7 @@ const formData = ref({
 
 const handleSubmit = () => {
   console.log('Form submitted:', formData.value);
+  router.push({ name: 'ResumePreview' });
   emit('submit', formData.value);
 };
 
