@@ -10,6 +10,8 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faEnvelope, faPhone, faLink } from '@fortawesome/free-solid-svg-icons';
 import { faLinkedin, faGithub } from '@fortawesome/free-brands-svg-icons';
+// import { vDraggable } from 'vue-draggable-plus'
+
 
 library.add(faEnvelope, faPhone, faLinkedin, faGithub);
 
@@ -17,6 +19,7 @@ library.add(faEnvelope, faPhone, faLinkedin, faGithub);
 const app = createApp(App);
 app.component("v-select", VueSelect)
 app.component('font-awesome-icon', FontAwesomeIcon)
+// app.component('v-draggable', vDraggable)
 
 app.use(createPinia());
 app.use(vuetify);
