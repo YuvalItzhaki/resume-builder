@@ -8,6 +8,7 @@
             animation: 150,
             ghostClass: 'ghost',
             group: 'components',
+            handle: '.handle',
             onUpdate,
             onAdd,
             onRemove
@@ -20,8 +21,9 @@
           :key="item.id"
           class="draggable-component"
         >
-          <span class="handle"></span>
+          <span class="handle">☰</span>
           <component :is="item.component" />
+          <button @click="editComponent(item)">Edit</button>
         </div>
       </section>
     </aside>
@@ -33,6 +35,7 @@
             animation: 150,
             ghostClass: 'ghost',
             group: 'components',
+            handle: '.handle',
             onUpdate,
             onAdd,
             onRemove
@@ -45,11 +48,20 @@
           :key="item.id"
           class="draggable-component"
         >
-          <span class="handle"></span>
+          <span class="handle">☰</span>
           <component :is="item.component" />
+          <button @click="editComponent(item)">Edit</button>
         </div>
       </section>
     </main>
+    <div v-if="isEditing" class="edit-modal">
+      <div class="modal-content">
+        <h2>Edit Component</h2>
+        <component :is="editingComponent.component" :editable="true" :contact="editingComponent.data" @update-contact="updateContact" />
+        <button @click="saveEdit">Save</button>
+        <button @click="cancelEdit">Cancel</button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -78,6 +90,9 @@ const mainComponents = ref([
   { name: 'Experience', component: ExperienceSection, id: 'experience' },
 ]);
 
+const isEditing = ref(false);
+const editingComponent = ref(null);
+
 function onUpdate() {
   console.log('update');
 }
@@ -88,6 +103,30 @@ function onAdd() {
 
 function onRemove() {
   console.log('remove');
+}
+
+function editComponent(item) {
+  editingComponent.value = { ...item };
+  isEditing.value = true;
+}
+
+function updateContact(newData) {
+  editingComponent.value.data = newData;
+  console.log('pppp', newData)
+}
+
+function saveEdit() {
+  const targetList = sidebarComponents.value.concat(mainComponents.value);
+  const index = targetList.findIndex(c => c.id === editingComponent.value.id);
+  console.log('gggg', editingComponent.value.id)
+  if (index !== -1) {
+    targetList[index].data = editingComponent.value.data;
+    console.log('llll', editingComponent.value)
+  }
+  isEditing.value = false;
+}
+function cancelEdit() {
+  isEditing.value = false;
 }
 </script>
 
@@ -101,7 +140,6 @@ function onRemove() {
 
 .sidebar {
   width: 30%;
-  /* background-color: #e0f7fa; */
   padding: 10px;
   background-color: #f9f9f9;
   border-radius: 2px;
@@ -116,7 +154,6 @@ function onRemove() {
 
 .draggable-component {
   margin-bottom: 10px;
-  /* border: 1px solid #ccc; */
   padding: 10px;
   border-radius: 5px;
   background-color: #f9f9f9;
@@ -129,5 +166,25 @@ function onRemove() {
   cursor: move;
   color: #00796b;
   font-weight: bold;
+}
+
+.edit-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 5px;
+  max-width: 500px;
+  width: 100%;
 }
 </style>

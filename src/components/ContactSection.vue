@@ -1,49 +1,69 @@
 <template>
   <div class="contact-section">
     <h2>CONTACT</h2>
+    <button @click="toggleEditMode">
+      {{ isEditing ? 'Save' : 'Edit' }}
+    </button>
     <p>
       <label for="contact-email">
-        <font-awesome-icon icon="envelope" /> <a :href="'mailto:' + contact.email">{{ contact.email }}</a>
+        <font-awesome-icon icon="envelope" />
+        <input v-model="contact.email" v-if="isEditing" />
+        <a :href="'mailto:' + contact.email" v-else>{{ contact.email }}</a>
       </label>
     </p>
     <p>
       <label for="contact-phone">
-        <font-awesome-icon icon="phone" /> {{ contact.phone }}
+        <font-awesome-icon icon="phone" />
+        <input v-model="contact.phone" v-if="isEditing" />
+        <span v-else>{{ contact.phone }}</span>
       </label>
     </p>
     <p>
       <label for="contact-linkedin">
-        <font-awesome-icon :icon="['fab', 'linkedin']" /> <a :href="contact.linkedin" target="_blank"> LinkedIn</a>
+        <font-awesome-icon :icon="['fab', 'linkedin']" />
+        <input v-model="contact.linkedin" v-if="isEditing" />
+        <a :href="contact.linkedin" target="_blank" v-else>LinkedIn</a>
       </label>
     </p>
     <p>
       <label for="contact-github">
-        <font-awesome-icon :icon="['fab', 'github']" /> <a :href="contact.github" target="_blank"> GitHub</a>
+        <font-awesome-icon :icon="['fab', 'github']" />
+        <input v-model="contact.github" v-if="isEditing" />
+        <a :href="contact.github" target="_blank" v-else>GitHub</a>
       </label>
     </p>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import axios from 'axios';
+import { ref, onMounted, watch } from 'vue';
+import { useContactStore } from '../stores/contactStore';
 
-const contact = ref({
-  email: '',
-  phone: '',
-  linkedin: '',
-  github: ''
+const isEditing = ref(false);
+
+const contactStore = useContactStore();
+
+onMounted(() => {
+  contactStore.fetchContact();
 });
 
-onMounted(async () => {
-    try {
-        const response = await axios.get('http://localhost:5001/api/resumes');
-        contact.value = response.data.contact;
-        console.log(contact.value)
-    } catch (error) {
-        console.error('Error fetching resume data:', error);
-    }
-    });
+const contact = ref({ ...contactStore.contact });
+
+watch(
+  () => contactStore.contact,
+  (newContact) => {
+    contact.value = { ...newContact };
+  },
+  { deep: true }
+);
+
+const toggleEditMode = () => {
+  if (isEditing.value) {
+    contactStore.setContact(contact.value);
+    contactStore.saveContact();
+  }
+  isEditing.value = !isEditing.value;
+};
 </script>
 
 <style scoped>
@@ -52,7 +72,6 @@ onMounted(async () => {
   background-color: #f9f9f9;
   border-radius: 2px;
   font-family: 'Times New Roman', Times, serif;
-  /* box-shadow: 0 8px 4px rgba(0, 0, 0, 0.1); */
 }
 
 .contact-section h2 {
@@ -73,5 +92,18 @@ onMounted(async () => {
 
 .contact-section a:hover {
   text-decoration: underline;
+}
+
+button {
+  margin-bottom: 10px;
+  background-color: #00796b;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #005f56;
 }
 </style>
