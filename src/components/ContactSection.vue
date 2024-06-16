@@ -29,18 +29,51 @@
         <a :href="contact.github" target="_blank" v-else>GitHub</a>
       </label>
     </p>
-    <button @click="toggleEditMode">
-      {{ isEditing ? 'Save' : 'Edit' }}
-    </button>
-    <button v-if="isEditing" @click="cancelEdit">Cancel</button>
+    <button @click="editContact">Edit</button>
+
+    <!-- Modal -->
+    <div v-if="showModal" class="edit-modal">
+      <div class="modal-content">
+        <h2>Edit Contact</h2>
+        <p>
+          <label for="modal-contact-email">
+            Email:
+            <input id="modal-contact-email" v-model="contact.email" />
+          </label>
+        </p>
+        <p>
+          <label for="modal-contact-phone">
+            Phone:
+            <input id="modal-contact-phone" v-model="contact.phone" />
+          </label>
+        </p>
+        <p>
+          <label for="modal-contact-linkedin">
+            LinkedIn:
+            <input id="modal-contact-linkedin" v-model="contact.linkedin" />
+          </label>
+        </p>
+        <p>
+          <label for="modal-contact-github">
+            GitHub:
+            <input id="modal-contact-github" v-model="contact.github" />
+          </label>
+        </p>
+        <button @click="saveEdit">Save </button>
+        <button @click="cancelEdit">Cancel </button>
+      </div>
+    </div>
   </div>
 </template>
+
+
 
 <script setup>
 import { ref, onMounted, watch } from 'vue';
 import { useContactStore } from '../stores/contactStore';
 
 const isEditing = ref(false);
+const showModal = ref(false);
 
 const contactStore = useContactStore();
 
@@ -58,18 +91,26 @@ watch(
   { deep: true }
 );
 
-const toggleEditMode = () => {
-  if (isEditing.value) {
-    contactStore.setContact(contact.value);
-    contactStore.saveContact();
-  }
-  isEditing.value = !isEditing.value;
+const editContact = () => {
+  showModal.value = true;
+  isEditing.value = true;
 };
+
+const saveEdit = () => {
+  contactStore.setContact(contact.value);
+  contactStore.saveContact();
+  showModal.value = false;
+  isEditing.value = false;
+};
+
 const cancelEdit = () => {
-  contact.value = contactStore.contact;
+  contact.value = { ...contactStore.contact };
+  showModal.value = false;
   isEditing.value = false;
 };
 </script>
+
+
 
 <style scoped>
 .contact-section {
@@ -100,16 +141,19 @@ const cancelEdit = () => {
 }
 
 button {
+  font-family: 'Times New Roman', Times, serif;
   margin-bottom: 10px;
-  background-color: #00796b;
-  color: white;
+  /* background-color: #00796b; */
+  color: black;
   border: none;
-  padding: 5px 10px;
+  padding: 5px 0px;
   cursor: pointer;
+  margin-right: 10px;
+  border-radius: 4px;
 }
 
 button:hover {
-  background-color: #005f56;
+  background-color: #6c99e1;
 }
 .edit-modal {
   position: fixed;
