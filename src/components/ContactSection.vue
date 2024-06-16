@@ -1,9 +1,6 @@
 <template>
   <div class="contact-section">
     <h2>CONTACT</h2>
-    <button @click="toggleEditMode">
-      {{ isEditing ? 'Save' : 'Edit' }}
-    </button>
     <p>
       <label for="contact-email">
         <font-awesome-icon icon="envelope" />
@@ -32,6 +29,10 @@
         <a :href="contact.github" target="_blank" v-else>GitHub</a>
       </label>
     </p>
+    <button @click="toggleEditMode">
+      {{ isEditing ? 'Save' : 'Edit' }}
+    </button>
+    <button v-if="isEditing" @click="cancelEdit">Cancel</button>
   </div>
 </template>
 
@@ -63,6 +64,10 @@ const toggleEditMode = () => {
     contactStore.saveContact();
   }
   isEditing.value = !isEditing.value;
+};
+const cancelEdit = () => {
+  contact.value = contactStore.contact;
+  isEditing.value = false;
 };
 </script>
 
@@ -105,5 +110,24 @@ button {
 
 button:hover {
   background-color: #005f56;
+}
+.edit-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 5px;
+  max-width: 500px;
+  width: 100%;
 }
 </style>
