@@ -41,12 +41,29 @@
           :reduce="skill => skill.value"
           style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;"
         />
-        <!-- <input id="tech_skills" v-model="formData.tech_skills" type="text" required /> -->
       </div>
       <div class="form-group">
-        <label for="languages">Languages:</label>
-        <input id="languages" v-model="formData.languages" type="text" required />
-      </div>
+      <label for="languages">Languages:</label>
+      <div v-for="(lang, langIndex) in formData.languages" :key="langIndex" class="language-group">
+        <v-select 
+          v-model="lang.value" 
+          :options="languagesOptions.map(l => l.value)" 
+          label="label" 
+          placeholder="Select language" 
+          @input="updateLanguageLevel(langIndex)"
+          class="language-select"
+        />
+        <v-select 
+          v-model="lang.level" 
+          :options="getLanguageLevels(lang.value)" 
+          label="label" 
+          placeholder="Select proficiency level" 
+          class="level-select"
+        />
+    </div>
+    <button type="button" @click="addLanguage">Add Language</button>
+</div>
+
       <fieldset class="form-group">
         <legend>Education</legend>
         <div v-for="(edu, index) in formData.education" :key="index" class="education-group">
@@ -109,26 +126,12 @@
 <script setup>
 import { ref } from 'vue';
 import { defineEmits } from 'vue';
-// import { VueSelect } from "vue-select";
-// import "vue-select/dist/vue-select.css";
 import vSelect from 'vue-select';
 import 'vue-select/dist/vue-select.css';
 import { useRouter } from 'vue-router';
-  
+import {techSkillsOptions, languagesOptions} from '../data/data.json'
+
 const router = useRouter();
-const techSkillsOptions = [
-  { value: 'Python', label: 'Python' },
-  { value: 'Java', label: 'Java' },
-  { value: 'Vue3.js', label: 'Vue3.js' },
-  { value: 'JavaScript', label: 'JavaScript' },
-  { value: 'Node.js', label: 'Node.js' },
-  { value: 'BullMQ', label: 'BullMQ' },
-  { value: 'MongoDB', label: 'MongoDB' },
-  { value: 'MySQL', label: 'MySQL' },
-  { value: 'Docker', label: 'Docker' },
-  { value: 'Linux', label: 'Linux' },
-  { value: 'AWS', label: 'AWS' },
-];
 
 const emit = defineEmits(['submit']);
 const formData = ref({
@@ -142,7 +145,7 @@ const formData = ref({
     github: ''
   },
   tech_skills: [],
-  languages: [],
+  languages: [{ value: '', level: '' }],
   education: [
     {
       institution: '',
@@ -167,6 +170,20 @@ const handleSubmit = () => {
   console.log('Form submitted:', formData.value);
   router.push({ name: 'ResumePreview' });
   emit('submit', formData.value);
+};
+
+const addLanguage = () => {
+  formData.value.languages.push({ value: '', level: '' });
+};
+
+const updateLanguageLevel = (langIndex) => {
+  formData.value.languages[langIndex].level = '';  // Reset the level when the language is changed
+};
+
+const getLanguageLevels = (language) => {
+  const lang = languagesOptions.find(l => l.value === language);
+  console.log('lang', lang)
+  return lang ? lang.levels : [];
 };
 
 const addEducation = () => {
@@ -196,6 +213,7 @@ const removeExperience = (index) => {
   formData.value.experience.splice(index, 1);
 };
 </script>
+
 
 <style scoped>
 .page-container {
@@ -242,6 +260,16 @@ const removeExperience = (index) => {
   gap: 15px;
 }
 
+.language-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.language-select, .level-select {
+  flex: 1;
+}
+
 .education-group, .experience-group {
   margin-bottom: 15px;
 }
@@ -272,3 +300,4 @@ legend {
   font-weight: bold;
 }
 </style>
+

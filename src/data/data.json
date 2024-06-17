@@ -1,0 +1,26 @@
+{
+    "techSkillsOptions": [
+      { "value": "Python", "label": "Python" },
+      { "value": "Java", "label": "Java" },
+      { "value": "Vue3.js", "label": "Vue3.js" },
+      { "value": "JavaScript", "label": "JavaScript" },
+      { "value": "Node.js", "label": "Node.js" },
+      { "value": "BullMQ", "label": "BullMQ" },
+      { "value": "MongoDB", "label": "MongoDB" },
+      { "value": "MySQL", "label": "MySQL" },
+      { "value": "Docker", "label": "Docker" },
+      { "value": "Linux", "label": "Linux" },
+      { "value": "AWS", "label": "AWS" }
+    ],
+    "languagesOptions": [
+      { "value": "English", "label": "English", "levels": ["Native", "Fluent", "Professional Proficiency", "Conversational", "Basic"] },
+      { "value": "Hebrew", "label": "Hebrew", "levels": ["Native", "Fluent", "Professional Proficiency", "Conversational", "Basic"] },
+      { "value": "Portuguese", "label": "Portuguese", "levels": ["Native", "Fluent", "Professional Proficiency", "Conversational", "Basic"] },
+      { "value": "Russian", "label": "Russian", "levels": ["Native", "Fluent", "Professional Proficiency", "Conversational", "Basic"] },
+      { "value": "Spanish", "label": "Spanish", "levels": ["Native", "Fluent", "Professional Proficiency", "Conversational", "Basic"] },
+      { "value": "Japanese", "label": "Japanese", "levels": ["Native", "Fluent", "Professional Proficiency", "Conversational", "Basic"] },
+      { "value": "Hindi", "label": "Hindi", "levels": ["Native", "Fluent", "Professional Proficiency", "Conversational", "Basic"] },
+      { "value": "Mandarin Chinese", "label": "Mandarin Chinese", "levels": ["Native", "Fluent", "Professional Proficiency", "Conversational", "Basic"] }
+    ]
+  }
+  

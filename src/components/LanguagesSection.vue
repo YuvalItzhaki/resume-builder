@@ -2,17 +2,12 @@
     <div class="languages-section">
       <h2>LANGUAGES</h2>
       <ul>
-        <li v-for="language in languages" :key="language">{{ language }}</li>
+        <li v-for="language in languages" :key="language"><strong>{{ language.value }}</strong> | {{ language.level }}</li>
       </ul>
     </div>
   </template>
   
   <script setup>
-//   import { ref } from 'vue';
-//   const languages = ref([
-//   'Hebrew | Native',
-//   'English | Professional Proficiency'
-// ]);
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 
