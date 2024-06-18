@@ -1,9 +1,11 @@
 <template>
   <div class="skills-section">
     <h2>TECH SKILLS</h2>
+    <div class="two-columns">
     <ul>
       <li v-for="skill in techSkills" :key="skill">{{ skill }}</li>
     </ul>
+  </div>
     <button @click="editSkills">Edit</button>
 
     <!-- Modal -->
@@ -146,4 +148,9 @@ button:hover {
   max-width: 500px;
   width: 100%;
 }
+div.two-columns {
+  column-count: 2;
+  column-gap: 20px;
+}
+
 </style>
