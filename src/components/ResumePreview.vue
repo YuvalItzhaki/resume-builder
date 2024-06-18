@@ -23,7 +23,7 @@
         >
           <span class="handle">☰</span>
           <component :is="item.component" />
-          <button @click="editComponent(item)">Edit</button>
+          <!-- <button @click="editComponent(item)">Edit</button> -->
         </div>
       </section>
     </aside>
@@ -50,7 +50,7 @@
         >
           <span class="handle">☰</span>
           <component :is="item.component" />
-          <button @click="editComponent(item)">Edit</button>
+          <!-- <button @click="editComponent(item)">Edit</button> -->
         </div>
       </section>
     </main>

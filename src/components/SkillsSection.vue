@@ -4,20 +4,90 @@
     <ul>
       <li v-for="skill in techSkills" :key="skill">{{ skill }}</li>
     </ul>
+    <button @click="editSkills">Edit</button>
+
+    <!-- Modal -->
+    <div v-if="showModal" class="edit-modal">
+      <div class="modal-content">
+        <h2>Edit Skills</h2>
+        <div>
+          <label for="predefined-skill">Add from list:</label>
+          <select id="predefined-skill" v-model="selectedPredefinedSkill">
+            <option disabled value="">Select a skill</option>
+            <option v-for="skill in predefinedSkills" :key="skill" :value="skill.value">{{ skill.value }}</option>
+          </select>
+          <button @click="addPredefinedSkill">Add</button>
+        </div>
+        <div>
+          <label for="new-skill">Add New Skill:</label>
+          <input id="new-skill" v-model="newSkill" />
+          <button @click="addSkill">Add</button>
+        </div>
+        <ul>
+          <li v-for="skill in techSkills" :key="skill.value">
+            <strong>{{ skill }}</strong>
+            <button @click="removeSkill(skill)">Remove</button>
+          </li>
+        </ul>
+        <button @click="saveEdit">Save</button>
+        <button @click="cancelEdit">Cancel</button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { onMounted, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useSkillStore } from '../stores/skillStore';
+import axios from 'axios';
+import techSkillsOptions from '../data/data.json'
 
 const skillStore = useSkillStore();
 
-onMounted(() => {
+const showModal = ref(false);
+const newSkill = ref('');
+const selectedPredefinedSkill = ref({});
+const predefinedSkills = ref([{}]);
+
+const techSkills = computed(() => skillStore.tech_skills);
+
+onMounted(async () => {
   skillStore.fetchTechSkills();
+  const response = techSkillsOptions;
+  console.log('response', response)
+  predefinedSkills.value = response.techSkillsOptions;
 });
 
-const techSkills = computed(() => skillStore.techSkills);
+const editSkills = () => {
+  showModal.value = true;
+};
+
+const addSkill = () => {
+  if (newSkill.value.trim()) {
+    skillStore.addSkill(newSkill.value.trim());
+    newSkill.value = '';
+  }
+};
+
+const addPredefinedSkill = () => {
+  if (selectedPredefinedSkill.value) {
+    skillStore.addSkill(selectedPredefinedSkill.value);
+    selectedPredefinedSkill.value = '';
+  }
+};
+
+const removeSkill = (skill) => {
+  skillStore.removeSkill(skill);
+};
+
+const saveEdit = () => {
+  skillStore.saveSkills();
+  showModal.value = false;
+};
+
+const cancelEdit = () => {
+  showModal.value = false;
+};
 </script>
 
 <style scoped>
@@ -38,7 +108,42 @@ const techSkills = computed(() => skillStore.techSkills);
 }
 
 .skills-section li {
-  list-style-type: disc; /* Ensure list items use bullets */
-  margin-bottom: 5px; /* Space between each list item */
+  list-style-type: disc;
+  margin-bottom: 5px;
+}
+
+button {
+  font-family: 'Times New Roman', Times, serif;
+  margin-bottom: 10px;
+  color: black;
+  border: none;
+  padding: 5px 0px;
+  cursor: pointer;
+  margin-right: 20px;
+  border-radius: 4px;
+}
+
+button:hover {
+  background-color: #6c99e1;
+}
+
+.edit-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 5px;
+  max-width: 500px;
+  width: 100%;
 }
 </style>
