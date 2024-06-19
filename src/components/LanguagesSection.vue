@@ -13,20 +13,22 @@
         <h2>Edit Languages</h2>
         <div>
           <label for="predefined-language">Add from list:</label>
-          <select id="predefined-language" v-model="selectedPredefinedLanguage">
-            <option disabled value="">Select language</option>
-            <option v-for="language in predefinedLanguage" :key="language" :value="language.value">{{ language.value }}</option>
-          </select>
-          <select id="predefined-language" v-model="selectedPredefinedLanguage">
-            <option disabled value="">Select level</option>
-            <option v-for="level in predefinedLanguage[0].levels" :key="level" :value="level">{{ level }}</option>
-          </select>
+          <v-select 
+            id="predefined-language" 
+            v-model="selectedLanguage" 
+            :options="predefinedLanguage" 
+            label="value" 
+            placeholder="Select language"
+          ></v-select>
+          <v-select 
+            id="predefined-level" 
+            v-model="selectedLevel" 
+            :options="selectedLanguage ? selectedLanguage.levels : []" 
+            placeholder="Select level"
+            :disabled="!selectedLanguage"
+          ></v-select>
+          
           <button @click="addPredefinedLanguage">Add</button>
-        </div>
-        <div>
-          <label for="new-language">Add New Language:</label>
-          <input id="new-language" v-model="newLanguage" />
-          <button @click="addLanguage">Add</button>
         </div>
         <ul>
           <li v-for="language in languages" :key="language.value">
@@ -45,14 +47,13 @@ import { ref, onMounted, computed } from 'vue';
 import { useLanguageStore } from '../stores/languageStore';
 import languagesOptions from '../data/data.json'
 
-// const languages = ref([]);
 
 const languageStore = useLanguageStore();
-
 const showModal = ref(false);
 const newLanguage = ref('');
-const selectedPredefinedLanguage = ref({});
 const predefinedLanguage = ref([{}]);
+const selectedLanguage = ref(null);
+const selectedLevel = ref('');
 
 const languages = computed(() => languageStore.languages);
 
@@ -74,9 +75,11 @@ const addLanguage = () => {
 };
 
 const addPredefinedLanguage = () => {
-  if (selectedPredefinedLanguage.value) {
-    languageStore.addLanguages([selectedPredefinedLanguage.value]);
-    selectedPredefinedLanguage.value = '';
+  if (selectedLanguage.value && selectedLevel.value) {
+    console.log(selectedLanguage.value, selectedLevel.value)
+    languageStore.addLanguages({ value: selectedLanguage.value.value, level: selectedLevel.value });
+    selectedLanguage.value = null;
+    selectedLevel.value = '';
   }
 };
 
