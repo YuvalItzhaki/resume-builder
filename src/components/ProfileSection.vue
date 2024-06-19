@@ -1,69 +1,128 @@
 <template>
-    <div class="profile-section">
-      <!-- <img src="path/to/profile-picture.jpg" alt="Profile Picture" class="profile-pic"/> -->
-      <h1>{{ name }}</h1>
-      <p>{{ title }}</p>
+  <div class="profile-section">
+    <h1>{{ profile.name }}</h1>
+    <p>{{ profile.title }}</p>
     </div>
-  </template>
-  
-  <script setup>
-    import { ref, onMounted } from 'vue';
-    import axios from 'axios';
+    <div>
+    <button @click="editProfile">Edit</button>
 
-    const name = ref();
-    const title = ref();
+    <!-- Modal -->
+    <div v-if="showModal" class="edit-modal">
+      <div class="modal-content">
+        <h2>Edit Profile</h2>
+        <p>
+          <label for="modal-profile-name" style="color: black;">
+            Name:
+            <input id="modal-profile-name" v-model="profile.name" />
+          </label>
+        </p>
+        <p>
+          <label for="modal-profile-title" style="color: black;">
+            Title:
+            <input id="modal-profile-title" v-model="profile.title" />
+          </label>
+        </p>
+        <button @click="saveEdit">Save</button>
+        <button @click="cancelEdit">Cancel</button>
+      </div>
+    </div>
+  </div>
+</template>
 
+<script setup>
+import { ref, onMounted } from 'vue';
+import { useProfileStore } from '../stores/profileStore';
 
-    onMounted(async () => {
-    try {
-        const response = await axios.get('http://localhost:5001/api/resumes');
-        name.value = response.data.name.toUpperCase();
-        title.value = response.data.title.toUpperCase();
+const showModal = ref(false);
+const profileStore = useProfileStore();
+const profile = ref({ ...profileStore.profile });
 
-    } catch (error) {
-        console.error('Error fetching resume data:', error);
-    }
-    });
-  </script>
-  
-  <style scoped>
-  .profile-section {
-    text-align: left;
-    height: 200px;
-    background-color: #073763;
-    /* box-shadow: 0 8px 4px rgba(0, 0, 0, 0.1); */
-    position: relative; /* Needed for the inner frame positioning */
-    padding: 20px; /* Space between the inner frame and the content */
+onMounted(() => {
+  profileStore.fetchProfile();
+  profile.value = { ...profileStore.profile };
+});
 
-  }
-  .profile-section::before {
+const editProfile = () => {
+  showModal.value = true;
+};
+
+const saveEdit = async () => {
+  profileStore.setProfile(profile.value);
+  await profileStore.saveProfile();
+  showModal.value = false;
+};
+
+const cancelEdit = () => {
+  profile.value = { ...profileStore.profile };
+  showModal.value = false;
+};
+</script>
+
+<style scoped>
+.profile-section {
+  text-align: left;
+  height: 200px;
+  background-color: #073763;
+  position: relative;
+  padding: 20px;
+}
+.profile-section::before {
   content: "";
   position: absolute;
-  top: 10px; /* Adjust this value to control the inner frame position */
-  left: 10px; /* Adjust this value to control the inner frame position */
-  right: 10px; /* Adjust this value to control the inner frame position */
-  bottom: 10px; /* Adjust this value to control the inner frame position */
-  border: 1px solid white; /* Color and thickness of the inner frame */
-  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1); /* Inner shadow for better appearance */
-  pointer-events: none; /* Ensure the inner frame doesn't interfere with interactions */
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  border: 1px solid white;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+  pointer-events: none;
 }
-  
-  .profile-pic {
-    width: 100%;
-    border-radius: 50%;
-  }
-  
-  h1 {
-    font-size: 34px;
-    font-family: 'Times New Roman', Times, serif;
-    color: white;
-    margin: 10px 0;
-  }
-  
-  p {
-    font-size: 18px;
-    color: white;
-    font-family: 'Times New Roman', Times, serif;
-  }
-  </style>
-  
+.profile-pic {
+  width: 100%;
+  border-radius: 50%;
+}
+h1 {
+  font-size: 34px;
+  font-family: 'Times New Roman', Times, serif;
+  color: white;
+  margin: 10px 0;
+}
+p {
+  font-size: 18px;
+  color: white;
+  font-family: 'Times New Roman', Times, serif;
+}
+.edit-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.5);
+}
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 5px;
+  max-width: 500px;
+  width: 100%;
+}
+button {
+  font-family: 'Times New Roman', Times, serif;
+  margin-bottom: 10px;
+  color: black;
+  border: none;
+  padding: 5px 0px;
+  cursor: pointer;
+  margin-right: 20px;
+  border-radius: 4px;
+}
+
+button:hover {
+  background-color: #6c99e1;
+}
+
+</style>

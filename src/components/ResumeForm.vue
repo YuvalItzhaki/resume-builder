@@ -3,11 +3,11 @@
     <form @submit.prevent="handleSubmit" class="form-container">
       <div class="form-group">
         <label for="name">Name:</label>
-        <input id="name" v-model="formData.name" type="text" required />
+        <input id="name" v-model="formData.profile.name" type="text" required />
       </div>
       <div class="form-group">
         <label for="title">Title:</label>
-        <input id="title" v-model="formData.title" type="text" required />
+        <input id="title" v-model="formData.profile.title" type="text" required />
       </div>
       <fieldset class="form-group">
         <legend>Contact</legend>
@@ -116,7 +116,7 @@
       </fieldset>
       <div class="form-group">
         <label for="profile">Profile:</label>
-        <input id="profile" v-model="formData.profile" type="text" required />
+        <input id="profile" v-model="formData.summary" type="text" required />
       </div>
       <button type="submit">Submit</button>
     </form>
@@ -137,7 +137,6 @@ const emit = defineEmits(['submit']);
 const formData = ref({
   name: '',
   email: '',
-  title: '',
   contact: {
     email: '',
     phone: '',
@@ -163,7 +162,11 @@ const formData = ref({
       duties: ''
     }
   ],
-  profile: '',
+  profile: {
+    name: '',
+    title: '',
+  },
+  summary: '',
 });
 
 const handleSubmit = () => {
