@@ -9,14 +9,30 @@
         <div class="dates">
           <span>{{ edu.startDate }}</span> - <span>{{ edu.endDate }}</span>
         </div>
-        <button @click="editEducation(index)">Edit</button>
       </li>
     </ul>
+    <button @click="showEditModal">Edit</button>
 
     <!-- Modal -->
     <div v-if="showModal" class="edit-modal">
       <div class="modal-content">
         <h2>Edit Education</h2>
+        
+        <!-- Edit Existing Education Section -->
+        <div v-if="education.length">
+          <h3>Choose existing education to edit</h3>
+          <ul>
+            <li v-for="(edu, index) in education" :key="index">
+              <div @click="editEducation(index)">
+                <strong>{{ edu.institution }}</strong> - {{ edu.degree }}
+                <div>{{ edu.startDate }} - {{ edu.endDate }}</div>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Add or Edit Education Details -->
+        <h3>{{ isEditing ? 'Edit existion details' : 'Add new education' }}</h3>
         <p>
           <label for="modal-edu-institution">
             Institution:
@@ -41,8 +57,9 @@
             <input id="modal-edu-endDate" v-model="currentEducation.endDate" />
           </label>
         </p>
-        <button @click="saveEdit">Save</button>
+        <button @click="saveEducation">{{ isEditing ? 'Save Changes' : 'Add Education' }}</button>
         <button @click="cancelEdit">Cancel</button>
+        <button @click="prepareNewEducation">Add New Education</button>
       </div>
     </div>
   </div>
@@ -52,8 +69,8 @@
 import { ref, onMounted, watch } from 'vue';
 import { useEducationStore } from '../stores/educationStore';
 
-const isEditing = ref(false);
 const showModal = ref(false);
+const isEditing = ref(false);
 const currentEducation = ref({});
 const currentIndex = ref(-1);
 
@@ -63,36 +80,49 @@ onMounted(() => {
   educationStore.fetchEducation();
 });
 
-// Ensure education is always treated as an array
 const education = ref([]);
 
 watch(
   () => educationStore.education,
   (newEducation) => {
-    // Assuming educationStore.education is an array
     education.value = [...newEducation];
   },
   { deep: true }
 );
 
+const showEditModal = () => {
+  showModal.value = true;
+  isEditing.value = false;
+  currentEducation.value = { institution: '', degree: '', startDate: '', endDate: '' };
+};
+
+const prepareNewEducation = () => {
+  currentIndex.value = -1;
+  currentEducation.value = { institution: '', degree: '', startDate: '', endDate: '' };
+  isEditing.value = false;
+};
+
 const editEducation = (index) => {
   currentIndex.value = index;
   currentEducation.value = { ...education.value[index] };
-  showModal.value = true;
   isEditing.value = true;
 };
 
-const saveEdit = () => {
-  education.value[currentIndex.value] = { ...currentEducation.value };
+const saveEducation = () => {
+  if (isEditing.value && currentIndex.value >= 0) {
+    // Edit existing education
+    education.value[currentIndex.value] = { ...currentEducation.value };
+  } else {
+    // Add new education
+    education.value.push({ ...currentEducation.value });
+  }
   educationStore.setEducation(education.value);
   educationStore.saveEducation();
   showModal.value = false;
-  isEditing.value = false;
 };
 
 const cancelEdit = () => {
   showModal.value = false;
-  isEditing.value = false;
 };
 </script>
 
@@ -120,7 +150,7 @@ button {
   border: none;
   padding: 5px 0px;
   cursor: pointer;
-  margin-right: 10px;
+  margin-right: 20px;
   border-radius: 4px;
 }
 
