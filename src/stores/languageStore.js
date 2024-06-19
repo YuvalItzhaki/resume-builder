@@ -1,33 +1,35 @@
-// import { defineStore } from 'pinia';
-// import axios from 'axios';
 
-// export const useLanguageStore = defineStore('language', {
-//     state: () => ({
-//         language: [],
-//       }),
-//   actions:{
-//     async fetchLanguage() {
-//     try {
-//       const response = await axios.get('http://localhost:5001/api/resumes');
-//       this.language = response.data.language;
-//     } catch (error) {
-//       console.error('Error fetching language:', error);
-//     }
-//     },
-//     async saveLanguage() {
-//         try {
-//         await axios.put('http://localhost:5001/api/resumes/language', this.language);
-//         console.log('Language saved successfully');
-//         } catch (error) {
-//         console.log('this.language', this.language)
-//         console.error('Error saving language data:', error);
-//         }
-//     },
-//     setLanguage(newLanguage) {
-//         this.language = newLanguage;
-//       },
-//       updateLanguageField(index,field, value) {
-//         this.language[index][field] = value;
-//       },
-//   }
-// });
+import { defineStore } from 'pinia';
+import axios from 'axios';
+
+export const useLanguageStore = defineStore('languageStore', {
+  state: () => ({
+    languages: []
+  }),
+  actions: {
+    async fetchLanguages() {
+      try {
+        const response = await axios.get('http://localhost:5001/api/resumes');
+        this.languages = response.data.languages;
+      } catch (error) {
+        console.error('Failed to fetch languages:', error);
+      }
+    },
+    addLanguages(language) {
+        const languageExists = this.languages.some(lang => lang.value === language.value);
+        if (!languageExists) {
+          this.languages.push(language);
+        }
+      },
+    removeLanguage(language) {
+    this.languages = this.languages.filter(lang => lang.value !== language.value);
+    },
+    async saveLanguages() {
+      try {
+        await axios.put('http://localhost:5001/api/resumes/languages', { languages: this.languages });
+      } catch (error) {
+        console.error('Failed to save languages:', error);
+      }
+    }
+  }
+});
