@@ -2,8 +2,8 @@
   <div class="profile-section">
     <h1>{{ profile.name }}</h1>
     <p>{{ profile.title }}</p>
-    </div>
-    <div>
+  </div>
+  <div>
     <button @click="editProfile">Edit</button>
 
     <!-- Modal -->
@@ -30,7 +30,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useProfileStore } from '../stores/profileStore';
 
 const showModal = ref(false);
@@ -39,7 +39,9 @@ const profile = ref({ ...profileStore.profile });
 
 onMounted(() => {
   profileStore.fetchProfile();
-  profile.value = { ...profileStore.profile };
+  watch(() => profileStore.profile, (newProfile) => {
+    profile.value = { ...newProfile };
+  });
 });
 
 const editProfile = () => {
@@ -124,5 +126,4 @@ button {
 button:hover {
   background-color: #6c99e1;
 }
-
 </style>

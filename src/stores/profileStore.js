@@ -13,7 +13,11 @@ export const useProfileStore = defineStore('profileStore', {
     async fetchProfile() {
       try {
         const response = await axios.get('http://localhost:5001/api/resumes');
-        this.profile = response.data.profile;
+        if (response.data && response.data.profile) {
+          this.profile = response.data.profile;
+        } else {
+          console.error('Profile data is missing in the response');
+        }
       } catch (error) {
         console.error('Failed to fetch profile:', error);
       }

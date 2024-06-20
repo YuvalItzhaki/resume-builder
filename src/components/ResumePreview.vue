@@ -118,10 +118,8 @@ function updateContact(newData) {
 function saveEdit() {
   const targetList = sidebarComponents.value.concat(mainComponents.value);
   const index = targetList.findIndex(c => c.id === editingComponent.value.id);
-  console.log('gggg', editingComponent.value.id)
   if (index !== -1) {
     targetList[index].data = editingComponent.value.data;
-    console.log('llll', editingComponent.value)
   }
   isEditing.value = false;
 }
