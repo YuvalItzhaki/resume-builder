@@ -56,7 +56,6 @@ const techSkills = computed(() => skillStore.tech_skills);
 onMounted(async () => {
   skillStore.fetchTechSkills();
   const response = techSkillsOptions;
-  console.log('response', response)
   predefinedSkills.value = response.techSkillsOptions;
 });
 
