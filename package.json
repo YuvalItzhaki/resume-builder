@@ -13,9 +13,12 @@
     "@fortawesome/free-brands-svg-icons": "^6.5.2",
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@fortawesome/vue-fontawesome": "^3.0.8",
+    "@vuelidate/core": "^2.0.3",
+    "@vuelidate/validators": "^2.0.4",
     "axios": "^1.7.2",
     "element-plus": "^2.7.4",
     "express-session": "^1.18.0",
+    "html2pdf.js": "^0.10.1",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "pinia": "^2.1.7",
@@ -23,6 +26,7 @@
     "vue-draggable-plus": "^0.5.0",
     "vue-router": "^4.0.13",
     "vue-select": "^4.0.0-beta.6",
+    "vuelidate": "^0.7.7",
     "vuetify": "^3.6.0-beta.0.0"
   },
   "devDependencies": {

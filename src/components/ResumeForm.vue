@@ -254,11 +254,12 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { techSkillsOptions, languagesOptions } from '../data/data.json';
+// import { useVuelidate } from '@vuelidate/core'
+import { email, required } from '@vuelidate/validators'
 
 const router = useRouter();
 const emit = defineEmits(['submit']);
 const form = ref(null);
-const showModal = ref(false);
 const formData = ref({
   profile: {
     name: '',
@@ -361,6 +362,13 @@ const phoneRule = (value) => {
   const regex = new RegExp(phonePattern);
   return regex.test(value) || 'Invalid phone number format';
 };
+const rules = {
+    name: { required },
+    email: { required, email },
+    // select: { required },
+    // items: { required },
+    // checkbox: { required },
+  }
 </script>
 
 <style scoped>

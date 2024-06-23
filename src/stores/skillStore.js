@@ -1,7 +1,6 @@
-// stores/skillStore.js
-
 import { defineStore } from 'pinia';
 import axios from 'axios';
+import { useResumeStore } from './resumeStore';
 
 export const useSkillStore = defineStore('skillStore', {
   state: () => ({
@@ -9,12 +8,11 @@ export const useSkillStore = defineStore('skillStore', {
   }),
   actions: {
     async fetchTechSkills() {
-      try {
-        const response = await axios.get('http://localhost:5001/api/resumes');
-        this.tech_skills = response.data.tech_skills;
-      } catch (error) {
-        console.error('Failed to fetch tech skills:', error);
+      const resumeStore = useResumeStore();
+      if (!resumeStore.resumeData) {
+        await resumeStore.fetchResume();
       }
+      this.tech_skills = resumeStore.resumeData.tech_skills || [];
     },
     addSkill(skill) {
       if (!this.tech_skills.includes(skill)) {
