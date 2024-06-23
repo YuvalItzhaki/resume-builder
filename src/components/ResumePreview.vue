@@ -2,72 +2,51 @@
   <div class="resume">
     <aside class="sidebar">
       <section
-        v-draggable="[
-          sidebarComponents,
-          {
-            animation: 150,
-            ghostClass: 'ghost',
-            group: 'components',
-            handle: '.handle',
-            onUpdate,
-            onAdd,
-            onRemove
-          }
-        ]"
         class="flex flex-col gap-2 p-4 w-300px bg-gray-500/5 rounded overflow-auto"
+        @dragover.prevent="dragOver"
+        @drop="dropItem('sidebar')"
       >
         <div
-          v-for="item in sidebarComponents"
+          v-for="(item, index) in sidebarComponents"
           :key="item.id"
           class="draggable-component"
+          :draggable="true"
+          @dragstart="startDrag(item, index, 'sidebar')"
+          @dragenter.prevent="dragEnter(index)"
         >
-          <span class="handle">☰</span>
-          <component :is="item.component" />
-          <!-- <button @click="editComponent(item)">Edit</button> -->
+          <component :is="item.component" :data="item.data" />
+        </div>
+        <div v-if="sidebarComponents.length === 0" class="empty-drop-area">
+          Drop here
         </div>
       </section>
     </aside>
     <main class="main-content">
       <section
-        v-draggable="[
-          mainComponents,
-          {
-            animation: 150,
-            ghostClass: 'ghost',
-            group: 'components',
-            handle: '.handle',
-            onUpdate,
-            onAdd,
-            onRemove
-          }
-        ]"
         class="flex flex-col gap-2 p-4 w-300px bg-gray-500/5 rounded overflow-auto"
+        @dragover.prevent="dragOver"
+        @drop="dropItem('main')"
       >
         <div
-          v-for="item in mainComponents"
+          v-for="(item, index) in mainComponents"
           :key="item.id"
           class="draggable-component"
+          :draggable="true"
+          @dragstart="startDrag(item, index, 'main')"
+          @dragenter.prevent="dragEnter(index)"
         >
-          <span class="handle">☰</span>
-          <component :is="item.component" />
-          <!-- <button @click="editComponent(item)">Edit</button> -->
+          <component :is="item.component" :data="item.data" />
+        </div>
+        <div v-if="mainComponents.length === 0" class="empty-drop-area">
+          Drop here
         </div>
       </section>
     </main>
-    <div v-if="isEditing" class="edit-modal">
-      <div class="modal-content">
-        <h2>Edit Component</h2>
-        <component :is="editingComponent.component" :editable="true" :contact="editingComponent.data" @update-contact="updateContact" />
-        <button @click="saveEdit">Save</button>
-        <button @click="cancelEdit">Cancel</button>
-      </div>
-    </div>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
-import { vDraggable } from 'vue-draggable-plus';
 
 import ProfileSection from './ProfileSection.vue';
 import ContactSection from './ContactSection.vue';
@@ -78,53 +57,55 @@ import LanguagesSection from './LanguagesSection.vue';
 import EducationSection from './EducationSection.vue';
 
 const sidebarComponents = ref([
-  { name: 'Profile', component: ProfileSection, id: 'profile' },
-  { name: 'Contact', component: ContactSection, id: 'contact' },
-  { name: 'Skills', component: SkillsSection, id: 'skills' },
-  { name: 'Languages', component: LanguagesSection, id: 'languages' },
-  { name: 'Education', component: EducationSection, id: 'education' },
+  { name: 'Profile', component: ProfileSection, id: 'profile', data: { /* Profile data */ } },
+  { name: 'Contact', component: ContactSection, id: 'contact', data: { /* Contact data */ } },
+  { name: 'Skills', component: SkillsSection, id: 'skills', data: { /* Skills data */ } },
+  { name: 'Languages', component: LanguagesSection, id: 'languages', data: { /* Languages data */ } },
+  { name: 'Education', component: EducationSection, id: 'education', data: { /* Education data */ } },
 ]);
 
 const mainComponents = ref([
-  { name: 'Summary', component: SummarySection, id: 'summary' },
-  { name: 'Experience', component: ExperienceSection, id: 'experience' },
+  { name: 'Summary', component: SummarySection, id: 'summary', data: { /* Summary data */ } },
+  { name: 'Experience', component: ExperienceSection, id: 'experience', data: { /* Experience data */ } },
 ]);
 
-const isEditing = ref(false);
-const editingComponent = ref(null);
+const draggingComponent = ref(null);
+const draggingSource = ref(null);
+const draggingIndex = ref(null);
+const targetIndex = ref(null);
 
-function onUpdate() {
-  console.log('update');
+function startDrag(item, index, source) {
+  draggingComponent.value = item;
+  draggingSource.value = source;
+  draggingIndex.value = index;
 }
 
-function onAdd() {
-  console.log('add');
+function dragOver(event) {
+  event.preventDefault();
 }
 
-function onRemove() {
-  console.log('remove');
+function dragEnter(index) {
+  targetIndex.value = index;
 }
 
-function editComponent(item) {
-  editingComponent.value = { ...item };
-  isEditing.value = true;
-}
+function dropItem(target) {
+  const sourceList = draggingSource.value === 'sidebar' ? sidebarComponents.value : mainComponents.value;
+  const targetList = target === 'sidebar' ? sidebarComponents.value : mainComponents.value;
 
-function updateContact(newData) {
-  editingComponent.value.data = newData;
-  console.log('pppp', newData)
-}
-
-function saveEdit() {
-  const targetList = sidebarComponents.value.concat(mainComponents.value);
-  const index = targetList.findIndex(c => c.id === editingComponent.value.id);
-  if (index !== -1) {
-    targetList[index].data = editingComponent.value.data;
+  if (draggingSource.value === target) {
+    // Reordering within the same list
+    sourceList.splice(draggingIndex.value, 1);
+    targetList.splice(targetIndex.value !== null ? targetIndex.value : targetList.length, 0, draggingComponent.value);
+  } else {
+    // Moving between different lists
+    sourceList.splice(draggingIndex.value, 1);
+    targetList.splice(targetIndex.value !== null ? targetIndex.value : targetList.length, 0, draggingComponent.value);
   }
-  isEditing.value = false;
-}
-function cancelEdit() {
-  isEditing.value = false;
+
+  draggingComponent.value = null;
+  draggingSource.value = null;
+  draggingIndex.value = null;
+  targetIndex.value = null;
 }
 </script>
 
@@ -158,31 +139,13 @@ function cancelEdit() {
   cursor: move;
 }
 
-.handle {
-  display: block;
-  margin-bottom: 5px;
-  cursor: move;
-  color: #00796b;
-  font-weight: bold;
-}
-
-.edit-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: rgba(0, 0, 0, 0.5);
-}
-
-.modal-content {
-  background: white;
+.empty-drop-area {
   padding: 20px;
+  text-align: center;
+  color: #aaa;
+  border: 2px dashed #ccc;
   border-radius: 5px;
-  max-width: 500px;
-  width: 100%;
+  background-color: #f9f9f9;
 }
 </style>
+
