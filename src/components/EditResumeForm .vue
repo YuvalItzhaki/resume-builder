@@ -5,12 +5,12 @@
         <v-card-title>
           <span class="headline">Edit Existing Resume Form</span>
         </v-card-title>
-
         <v-card-text>
           <v-row>
+
             <v-col cols="12">
               <v-text-field
-                v-model="formData.profile.name"
+                v-model="resumeData.profile.name"
                 label="Name"
                 required
               ></v-text-field>
@@ -18,7 +18,7 @@
 
             <v-col cols="12">
               <v-text-field
-                v-model="formData.profile.title"
+                v-model="resumeData.profile.title"
                 label="Title"
                 required
               ></v-text-field>
@@ -32,7 +32,7 @@
           <v-row>
             <v-col cols="12">
               <v-text-field
-                v-model="formData.contact.email"
+                v-model="resumeData.contact.email"
                 label="Email"
                 type="email"
                 required
@@ -41,7 +41,7 @@
 
             <v-col cols="12">
               <v-text-field
-                v-model="formData.contact.phone"
+                v-model="resumeData.contact.phone"
                 label="Phone"
                 type="tel"
                 required
@@ -53,7 +53,7 @@
 
             <v-col cols="12">
               <v-text-field
-                v-model="formData.contact.linkedin"
+                v-model="resumeData.contact.linkedin"
                 label="LinkedIn"
                 required
               ></v-text-field>
@@ -61,7 +61,7 @@
 
             <v-col cols="12">
               <v-text-field
-                v-model="formData.contact.github"
+                v-model="resumeData.contact.github"
                 label="GitHub"
                 required
               ></v-text-field>
@@ -75,7 +75,7 @@
           <v-row>
             <v-col cols="12">
               <v-autocomplete
-                v-model="formData.tech_skills"
+                v-model="resumeData.tech_skills"
                 :items="techSkillsOptions"
                 item-title="label"
                 item-value="value"
@@ -88,10 +88,9 @@
           </v-row>
 
           <v-divider></v-divider>
-
           <v-card-subtitle>Languages</v-card-subtitle>
 
-          <v-row v-for="(lang, langIndex) in formData.languages" :key="langIndex">
+          <v-row v-for="(lang, langIndex) in resumeData.languages" :key="langIndex">
             <v-col cols="6">
               <v-autocomplete
                 v-model="lang.value"
@@ -117,7 +116,7 @@
 
           <v-card-subtitle>Education</v-card-subtitle>
 
-          <v-row v-for="(edu, index) in formData.education" :key="index">
+          <v-row v-for="(edu, index) in resumeData.education" :key="index">
             <v-col cols="12">
               <v-text-field
                 v-model="edu.institution"
@@ -141,7 +140,6 @@
                 @click="openDatePicker(index, 'start')"
                 required
               ></v-text-field>
-              <!-- Date Picker -->
               <v-date-picker
                 v-if="edu.showStartDatePicker"
                 v-model="edu.startDate"
@@ -159,7 +157,6 @@
                 @click="openDatePicker(index, 'end')"
                 required
               ></v-text-field>
-              <!-- Date Picker -->
               <v-date-picker
                 v-if="edu.showEndDatePicker"
                 v-model="edu.endDate"
@@ -175,18 +172,11 @@
           </div>
           <v-divider></v-divider>
 
-          <!-- Experience and other sections omitted for brevity -->
-
-        <!-- </v-card-text>
-
-        
-      </v-card> -->
-
           <v-divider></v-divider>
 
           <v-card-subtitle>Experience</v-card-subtitle>
 
-          <v-row v-for="(exp, index) in formData.experience" :key="index">
+          <v-row v-for="(exp, index) in resumeData.experience" :key="index">
             <v-col cols="12">
               <v-text-field
                 v-model="exp.title"
@@ -234,7 +224,7 @@
           <v-row>
             <v-col cols="12">
               <v-textarea
-                v-model="formData.summary"
+                v-model="resumeData.summary"
                 label="Profile"
                 required
               ></v-textarea>
@@ -254,16 +244,13 @@
 import { ref, onMounted, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { techSkillsOptions, languagesOptions } from '../data/data.json';
-// import { useVuelidate } from '@vuelidate/core'
-import { email, required } from '@vuelidate/validators';
 import axios from 'axios';
-
 
 const router = useRouter();
 const route = useRoute();
 const emit = defineEmits(['submit']);
 const form = ref(null);
-const formData = ref({
+const resumeData = ref({
   profile: {
     name: '',
     title: ''
@@ -297,46 +284,34 @@ const formData = ref({
 const phonePattern = '^\\+?[1-9]\\d{1,14}$';
 const phoneError = ref('');
 const id = route.params.id;
-console.log('oute.params', route.params)
-
 
 onMounted(async () => {
   if (id) {
     try {
       const response = await axios.get(`http://localhost:5001/api/resumes/${id}`);
-      formData.value = response.data;
-      console.log('ffff', formData.value)
+      Object.assign(resumeData.value, response.data[0]); // Use Object.assign to keep reactivity
+      console.log('resumeData from DB is: ', resumeData.value);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   }
 });
 
-// async function fetchData() {
-//     try {
-//       const response = await axios.get('http://localhost:5001/api/resumes');
-//       items.value = response.data;
-//       console.log('Fetched items:', items.value);
-//     } catch (error) {
-//       console.error('Error fetching data:', error);
-//     }
-//   }
-
 const handleSubmit = () => {
   if (form.value.validate()) {
-    console.log('Form submitted:', formData.value);
+    console.log('Form submitted:', resumeData.value);
     router.push({ name: 'ResumePreview' });
-    emit('submit', formData.value);
+    emit('submit', resumeData.value);
   }
 };
 
 const addLanguage = () => {
-  formData.value.languages.push({ value: '', level: '' });
+  resumeData.value.languages.push({ value: '', level: '' });
 };
 
 const updateLanguageLevel = (langIndex) => {
-  formData.value.languages[langIndex].level = ''; 
-} ;
+  resumeData.value.languages[langIndex].level = '';
+};
 
 const getLanguageLevels = (language) => {
   const lang = languagesOptions.find(l => l.value === language);
@@ -344,7 +319,7 @@ const getLanguageLevels = (language) => {
 };
 
 const addEducation = () => {
-  formData.value.education.push({
+  resumeData.value.education.push({
     institution: '',
     degree: '',
     startDate: null,
@@ -355,26 +330,27 @@ const addEducation = () => {
 };
 
 const removeEducation = (index) => {
-  formData.value.education.splice(index, 1);
+  resumeData.value.education.splice(index, 1);
 };
 
 const openDatePicker = (index, type) => {
   if (type === 'start') {
-    formData.value.education[index].showStartDatePicker = true;
+    resumeData.value.education[index].showStartDatePicker = true;
   } else if (type === 'end') {
-    formData.value.education[index].showEndDatePicker = true;
+    resumeData.value.education[index].showEndDatePicker = true;
   }
 };
 
 const closeDatePicker = (index, type) => {
   if (type === 'start') {
-    formData.value.education[index].showStartDatePicker = false;
+    resumeData.value.education[index].showStartDatePicker = false;
   } else if (type === 'end') {
-    formData.value.education[index].showEndDatePicker = false;
+    resumeData.value.education[index].showEndDatePicker = false;
   }
 };
+
 const addExperience = () => {
-  formData.value.experience.push({
+  resumeData.value.experience.push({
     title: '',
     company: '',
     startDate: '',
@@ -384,20 +360,16 @@ const addExperience = () => {
 };
 
 const removeExperience = (index) => {
-  formData.value.experience.splice(index, 1);
+  resumeData.value.experience.splice(index, 1);
 };
+
 const phoneRule = (value) => {
   const regex = new RegExp(phonePattern);
   return regex.test(value) || 'Invalid phone number format';
 };
-const rules = {
-    name: { required },
-    email: { required, email },
-    // select: { required },
-    // items: { required },
-    // checkbox: { required },
-  }
+
 </script>
+
 
 <style scoped>
 .page-container {

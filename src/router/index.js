@@ -4,7 +4,11 @@ import Dashboard from '../views/Dashboard.vue';
 import Login from '../views/Login.vue';
 import Register from '../views/Register.vue';
 import CreateResume from '../views/CreateResume.vue';
-import ResumePreview from '../views/ResumePreview.vue'
+import ResumePreview from '../views/ResumePreview.vue';
+import MyResume from '../views/MyResume.vue';
+import EditResume from '../views/EditResume.vue'
+
+
 
 
 const routes = [
@@ -32,7 +36,17 @@ const routes = [
     path: '/resume-preview',
     name: 'ResumePreview',
     component: ResumePreview,
-},
+  },
+  {
+    path: '/resume-list',
+    name: 'MyResume',
+    component: MyResume,
+  },
+  {
+    path: '/edit-resume/:id',
+    name: 'EditResume',
+    component: EditResume,
+  },
 ];
 
 const router = createRouter({

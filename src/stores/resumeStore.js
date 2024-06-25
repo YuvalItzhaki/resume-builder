@@ -19,6 +19,18 @@ export const useResumeStore = defineStore('resume', () => {
       console.error('Error fetching resume:', error);
     }
   };
+  const fetchResumeById = async (id) => {
+    try {
+      const response = await axios.get(`http://localhost:5001/api/resumes/${id}`, {
+        headers: {
+          Authorization: `Bearer ${authStore.token}`,
+        },
+      });
+      resumeData.value = response.data;
+    } catch (error) {
+      console.error('Error fetching resume:', error);
+    }
+  };
 
   const saveResume = async (data) => {
     try {
@@ -39,5 +51,5 @@ export const useResumeStore = defineStore('resume', () => {
     }
   };
 
-  return { resumeData, fetchResume, saveResume };
+  return { resumeData, fetchResume, saveResume, fetchResumeById };
 });

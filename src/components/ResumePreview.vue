@@ -1,5 +1,7 @@
 <template>
   <div class="resume">
+    <!-- <button @click="editResume('66785e60e3159b3322686ead')">Edit Resume</button>  -->
+    <!-- <div >{{ resumeStore.resumeData[0]._id }}</div> -->
     <aside class="sidebar">
       <section
         class="flex flex-col gap-2 p-4 w-300px bg-gray-500/5 rounded overflow-auto"
@@ -56,6 +58,8 @@ import ExperienceSection from './ExperienceSection.vue';
 import LanguagesSection from './LanguagesSection.vue';
 import EducationSection from './EducationSection.vue';
 
+// const resumeStore = useResumeStore()
+
 const sidebarComponents = ref([
   { name: 'Profile', component: ProfileSection, id: 'profile', data: { /* Profile data */ } },
   { name: 'Contact', component: ContactSection, id: 'contact', data: { /* Contact data */ } },
@@ -107,6 +111,12 @@ function dropItem(target) {
   draggingIndex.value = null;
   targetIndex.value = null;
 }
+// import { useResumeStore } from '../stores/resumeStore';
+// function editResume(id){
+//   const resumeStore = useResumeStore()
+//   resumeStore.fetchResumeById(id)
+//   console.log('llllll', resumeStore.resumeData)
+// }
 </script>
 
 <style scoped>
@@ -148,4 +158,3 @@ function dropItem(target) {
   background-color: #f9f9f9;
 }
 </style>
-

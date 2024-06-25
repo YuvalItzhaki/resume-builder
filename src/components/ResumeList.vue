@@ -64,12 +64,14 @@
   <script setup>
   import { ref, onMounted } from 'vue';
   import axios from 'axios';
+  import { useRouter } from 'vue-router';
+
+  const router = useRouter();
+  const items = ref([]);
   
   const headers = ref([
     'Id', 'Profile', 'Contact', 'Education', 'Tech Skills', 'Languages', 'Experience', 'Summary'
   ]);
-  
-  const items = ref([]);
   
   async function fetchData() {
     try {
@@ -80,20 +82,17 @@
       console.error('Error fetching data:', error);
     }
   }
+
+    const navigate = (path) => {
+        router.push(path);
+    };
   
-  async function editItem(item) {
-    
-    const id = item._id
-    console.log('Edit item:', id);
-    // try {
-    //   const response = await axios.delete('http://localhost:5001/api/resumes');
-    //   items.value = response.data;
-    //   console.log('Fetched items:', items.value);
-    // } catch (error) {
-    //   console.error('Error fetching data:', error);
-    // }
-  }
-  
+    async function editItem(item) {
+        const id = item._id;
+        console.log('Edit item:', id);
+        navigate(`/edit-resume/${id}`)
+    }
+
   async function deleteItem(item) {
     const id = item._id
     console.log('Delete item:', id);
