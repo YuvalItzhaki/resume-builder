@@ -24,7 +24,6 @@
               ></v-text-field>
             </v-col>
           </v-row>
-
           <v-divider></v-divider>
 
           <v-card-subtitle>Contact</v-card-subtitle>
@@ -67,7 +66,6 @@
               ></v-text-field>
             </v-col>
           </v-row>
-
           <v-divider></v-divider>
 
           <v-card-subtitle>Tech Skills</v-card-subtitle>
@@ -86,7 +84,6 @@
               ></v-autocomplete>
             </v-col>
           </v-row>
-
           <v-divider></v-divider>
 
           <v-card-subtitle>Languages</v-card-subtitle>
@@ -141,7 +138,6 @@
                 @click="openDatePicker(index, 'start')"
                 required
               ></v-text-field>
-              <!-- Date Picker -->
               <v-date-picker
                 v-if="edu.showStartDatePicker"
                 v-model="edu.startDate"
@@ -159,7 +155,6 @@
                 @click="openDatePicker(index, 'end')"
                 required
               ></v-text-field>
-              <!-- Date Picker -->
               <v-date-picker
                 v-if="edu.showEndDatePicker"
                 v-model="edu.endDate"
@@ -174,14 +169,6 @@
             <v-btn text @click="removeEducation(index)">Remove</v-btn>
           </div>
           <v-divider></v-divider>
-
-          <!-- Experience and other sections omitted for brevity -->
-
-        <!-- </v-card-text>
-
-        
-      </v-card> -->
-
           <v-divider></v-divider>
 
           <v-card-subtitle>Experience</v-card-subtitle>
@@ -235,7 +222,7 @@
             <v-col cols="12">
               <v-textarea
                 v-model="formData.summary"
-                label="Profile"
+                label="Summary"
                 required
               ></v-textarea>
             </v-col>
@@ -362,13 +349,7 @@ const phoneRule = (value) => {
   const regex = new RegExp(phonePattern);
   return regex.test(value) || 'Invalid phone number format';
 };
-const rules = {
-    name: { required },
-    email: { required, email },
-    // select: { required },
-    // items: { required },
-    // checkbox: { required },
-  }
+
 </script>
 
 <style scoped>

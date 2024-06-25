@@ -1,6 +1,6 @@
 <template>
   <v-container class="page-container">
-    <v-form  @submit.prevent="handleSubmit" ref="form">
+    <v-form  @submit.prevent="handleUpdateResume" ref="form">
       <v-card class="form-container">
         <v-card-title>
           <span class="headline">Edit Existing Resume Form</span>
@@ -225,7 +225,7 @@
             <v-col cols="12">
               <v-textarea
                 v-model="resumeData.summary"
-                label="Profile"
+                label="Summary"
                 required
               ></v-textarea>
             </v-col>
@@ -233,7 +233,7 @@
         </v-card-text>
 
         <v-card-actions>
-          <v-btn type="submit" color="primary">Submit</v-btn>
+          <v-btn type="update" color="primary">Update Resume</v-btn>
         </v-card-actions>
       </v-card>
     </v-form>
@@ -248,7 +248,7 @@ import axios from 'axios';
 
 const router = useRouter();
 const route = useRoute();
-const emit = defineEmits(['submit']);
+const emit = defineEmits(['update']);
 const form = ref(null);
 const resumeData = ref({
   profile: {
@@ -297,11 +297,15 @@ onMounted(async () => {
   }
 });
 
-const handleSubmit = () => {
+const handleUpdateResume = async () => {
   if (form.value.validate()) {
-    console.log('Form submitted:', resumeData.value);
-    router.push({ name: 'ResumePreview' });
-    emit('submit', resumeData.value);
+    try {
+      const response = await axios.put(`http://localhost:5001/api/resumes/${id}`, resumeData.value);
+      emit('update', response.data);
+      // router.push({ name: 'ResumePreview' });
+    } catch (error) {
+      console.error('Error updating resume:', error);
+    }
   }
 };
 
