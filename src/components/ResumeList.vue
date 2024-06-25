@@ -98,7 +98,8 @@
     console.log('Delete item:', id);
     try {
       const response = await axios.delete(`http://localhost:5001/api/resumes/${id}`);
-      items.value = response.data;
+      Object.assign(items.value, response.data); // Use Object.assign to keep reactivity
+      // items.value = response.data;
       console.log('Fetched items:', items.value);
     } catch (error) {
       console.error('Error fetching data:', error);
