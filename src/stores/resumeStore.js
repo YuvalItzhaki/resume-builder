@@ -51,5 +51,24 @@ export const useResumeStore = defineStore('resume', () => {
     }
   };
 
-  return { resumeData, fetchResume, saveResume, fetchResumeById };
+  const saveResumeById = async (data, id) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:5001/api/resumes/${id}`,
+        data,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authStore.token}`,
+          },
+        }
+      );
+      resumeData.value = response.data;
+      console.log('Resume saved successfully:', response.data);
+    } catch (error) {
+      console.error('Error saving resume:', error);
+    }
+  };
+
+  return { resumeData, fetchResume, saveResume, fetchResumeById, saveResumeById };
 });

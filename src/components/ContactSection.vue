@@ -66,22 +66,23 @@
   </div>
 </template>
 
-
-
 <script setup>
 import { ref, onMounted, watch } from 'vue';
 import { useContactStore } from '../stores/contactStore';
+import { useRoute } from 'vue-router';
 
 const isEditing = ref(false);
 const showModal = ref(false);
-
+const route = useRoute();
+const id = route.params.id;
 const contactStore = useContactStore();
 
-onMounted(() => {
-  contactStore.fetchContact();
-});
 
 const contact = ref({ ...contactStore.contact });
+
+onMounted(() => {
+  contactStore.fetchContact(id);
+});
 
 watch(
   () => contactStore.contact,
@@ -98,7 +99,7 @@ const editContact = () => {
 
 const saveEdit = () => {
   contactStore.setContact(contact.value);
-  contactStore.saveContact();
+  contactStore.saveContact(id);
   showModal.value = false;
   isEditing.value = false;
 };
@@ -109,8 +110,6 @@ const cancelEdit = () => {
   isEditing.value = false;
 };
 </script>
-
-
 
 <style scoped>
 .contact-section {
@@ -143,7 +142,6 @@ const cancelEdit = () => {
 button {
   font-family: 'Times New Roman', Times, serif;
   margin-bottom: 10px;
-  /* background-color: #00796b; */
   color: black;
   border: none;
   padding: 5px 0px;
@@ -155,6 +153,7 @@ button {
 button:hover {
   background-color: #6c99e1;
 }
+
 .edit-modal {
   position: fixed;
   top: 0;

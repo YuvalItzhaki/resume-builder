@@ -1,7 +1,5 @@
 import { defineStore } from 'pinia';
-import axios from 'axios';
 import { useResumeStore } from './resumeStore';
-
 
 export const useContactStore = defineStore('contact', {
   state: () => ({
@@ -13,12 +11,12 @@ export const useContactStore = defineStore('contact', {
     },
   }),
   actions: {
-    async fetchContact() {
+    async fetchContact(id) {
       const resumeStore = useResumeStore();
       if (!resumeStore.resumeData) {
-        await resumeStore.fetchResume();
+        await resumeStore.fetchResumeById(id);
+        this.contact = resumeStore.resumeData[0]?.contact || {};
       }
-      this.contact = resumeStore.resumeData.contact || [];
     },
     setContact(newContact) {
       this.contact = newContact;
@@ -26,17 +24,10 @@ export const useContactStore = defineStore('contact', {
     updateContactField(field, value) {
       this.contact[field] = value;
     },
-    // async fetchContact() {
-    //   try {
-    //     const response = await axios.get('http://localhost:5001/api/resumes');
-    //     this.contact = response.data.contact;
-    //   } catch (error) {
-    //     console.error('Error fetching contact data:', error);
-    //   }
-    // },
-    async saveContact() {
+    async saveContact(id) {
       try {
-        await axios.put('http://localhost:5001/api/resumes', this.contact);
+        const resumeStore = useResumeStore();
+        await resumeStore.saveResumeById(this.contact, id);
         console.log('Contact saved successfully');
       } catch (error) {
         console.error('Error saving contact data:', error);

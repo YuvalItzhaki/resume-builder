@@ -242,7 +242,9 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { techSkillsOptions, languagesOptions } from '../data/data.json';
 // import { useVuelidate } from '@vuelidate/core'
-import { email, required } from '@vuelidate/validators'
+import { email, required } from '@vuelidate/validators';
+import axios from 'axios';
+
 
 const router = useRouter();
 const emit = defineEmits(['submit']);
@@ -281,11 +283,16 @@ const formData = ref({
 const phonePattern = '^\\+?[1-9]\\d{1,14}$';
 const phoneError = ref('');
 
-const handleSubmit = () => {
+
+const handleSubmit = async () => {
   if (form.value.validate()) {
-    console.log('Form submitted:', formData.value);
-    router.push({ name: 'ResumePreview' });
-    emit('submit', formData.value);
+    try {
+      await axios.post(`http://localhost:5001/api/resumes`, formData.value);
+      console.log('Resume Data was saved in database..')
+      router.push({ name: 'MyResume' });
+    } catch (error) {
+      console.error('Error updating resume:', error);
+    }
   }
 };
 
