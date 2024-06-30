@@ -45,7 +45,8 @@
   <script setup>
 import { ref, onMounted, computed } from 'vue';
 import { useLanguageStore } from '../stores/languageStore';
-import languagesOptions from '../data/data.json'
+import languagesOptions from '../data/data.json';
+import { useRoute } from 'vue-router';
 
 
 const languageStore = useLanguageStore();
@@ -54,11 +55,13 @@ const newLanguage = ref('');
 const predefinedLanguage = ref([{}]);
 const selectedLanguage = ref(null);
 const selectedLevel = ref('');
+const route = useRoute();
+const id = route.params.id;
 
 const languages = computed(() => languageStore.languages);
 
 onMounted(() => {
-  languageStore.fetchLanguages();
+  languageStore.fetchLanguages(id);
   predefinedLanguage.value = languagesOptions.languagesOptions;
 });
 

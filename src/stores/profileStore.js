@@ -11,25 +11,14 @@ export const useProfileStore = defineStore('profileStore', {
   }),
 
   actions: {
-    async fetchProfile() {
+    async fetchProfile(id) {
       const resumeStore = useResumeStore();
       if (!resumeStore.resumeData) {
-        await resumeStore.fetchResume();
+        await resumeStore.fetchResumeById(id);
       }
-      this.profile = resumeStore.resumeData.profile;
+      this.profile = resumeStore.resumeData[0]?.profile || {};
     },
-    // async fetchProfile() {
-    //   try {
-    //     const response = await axios.get('http://localhost:5001/api/resumes');
-    //     if (response.data && response.data.profile) {
-    //       this.profile = response.data.profile;
-    //     } else {
-    //       console.error('Profile data is missing in the response');
-    //     }
-    //   } catch (error) {
-    //     console.error('Failed to fetch profile:', error);
-    //   }
-    // },
+
     setProfile(newProfile) {
       this.profile = newProfile;
     },

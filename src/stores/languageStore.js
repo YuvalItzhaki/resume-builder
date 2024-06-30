@@ -3,27 +3,19 @@ import { defineStore } from 'pinia';
 import axios from 'axios';
 import { useResumeStore } from './resumeStore';
 
-
 export const useLanguageStore = defineStore('languageStore', {
   state: () => ({
     languages: []
   }),
   actions: {
-    async fetchLanguages() {
+    async fetchLanguages(id) {
       const resumeStore = useResumeStore();
       if (!resumeStore.resumeData) {
-        await resumeStore.fetchResume();
+        await resumeStore.fetchResumeById(id);
       }
-      this.languages = resumeStore.resumeData.languages || [];
+      this.languages = resumeStore.resumeData[0]?.languages || [];
     },
-    // async fetchLanguages() {
-    //   try {
-    //     const response = await axios.get('http://localhost:5001/api/resumes');
-    //     this.languages = response.data.languages;
-    //   } catch (error) {
-    //     console.error('Failed to fetch languages:', error);
-    //   }
-    // },
+
     addLanguages(language) {
         const languageExists = this.languages.some(lang => lang.value === language.value);
         if (!languageExists) {

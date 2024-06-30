@@ -33,7 +33,7 @@ const routes = [
     component: CreateResume,
   },
   {
-    path: '/resume-preview',
+    path: '/resume-preview/:id',
     name: 'ResumePreview',
     component: ResumePreview,
   },

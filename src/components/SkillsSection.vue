@@ -43,7 +43,10 @@ import { ref, computed, onMounted } from 'vue';
 import { useSkillStore } from '../stores/skillStore';
 import axios from 'axios';
 import techSkillsOptions from '../data/data.json'
+import { useRoute } from 'vue-router';
 
+const route = useRoute();
+const id = route.params.id;
 const skillStore = useSkillStore();
 
 const showModal = ref(false);
@@ -54,7 +57,7 @@ const predefinedSkills = ref([{}]);
 const techSkills = computed(() => skillStore.tech_skills);
 
 onMounted(async () => {
-  skillStore.fetchTechSkills();
+  skillStore.fetchTechSkills(id);
   const response = techSkillsOptions;
   predefinedSkills.value = response.techSkillsOptions;
 });

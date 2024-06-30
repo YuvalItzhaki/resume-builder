@@ -32,16 +32,20 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue';
 import { useProfileStore } from '../stores/profileStore';
+import { useRoute } from 'vue-router';
+
 
 const showModal = ref(false);
+const route = useRoute();
+const id = route.params.id;
 const profileStore = useProfileStore();
 const profile = ref({ ...profileStore.profile });
 
 onMounted(() => {
-  profileStore.fetchProfile();
-  watch(() => profileStore.profile, (newProfile) => {
-    profile.value = { ...newProfile };
-  });
+  profileStore.fetchProfile(id);
+  // watch(() => profileStore.profile, (newProfile) => {
+  //   profile.value = { ...newProfile };
+  // });
 });
 
 const editProfile = () => {

@@ -2,32 +2,27 @@ import { defineStore } from 'pinia';
 import axios from 'axios';
 import { useResumeStore } from './resumeStore';
 
-export const useEducationStore = defineStore('education', {
+export const useEducationStore = defineStore('educationStore', {
   state: () => ({
     education: [],
   }),
   actions: {
-    async fetchEducation() {
+    async fetchEducation(id) {
       const resumeStore = useResumeStore();
       if (!resumeStore.resumeData) {
-        await resumeStore.fetchResume();
+        await resumeStore.fetchResumeById(id);
       }
-      this.education = resumeStore.resumeData.education || [];
+      this.education = resumeStore.resumeData[0]?.education || [];
     },
+
     setEducation(newEducation) {
       this.education = newEducation;
     },
+
     updateEducationField(index, field, value) {
       this.education[index][field] = value;
     },
-    // async fetchEducation() {
-    //   try {
-    //     const response = await axios.get('http://localhost:5001/api/resumes');
-    //     this.education = response.data.education;
-    //   } catch (error) {
-    //     console.error('Error fetching education:', error);
-    //   }
-    // },
+
     async saveEducation() {
       try {
         await axios.put('http://localhost:5001/api/resumes/education', this.education);

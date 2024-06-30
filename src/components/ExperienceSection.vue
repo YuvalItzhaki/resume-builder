@@ -74,6 +74,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useExperienceStore } from '../stores/experienceStore';
+import { useRoute } from 'vue-router';
 
 const showModal = ref(false);
 const isEditing = ref(false);
@@ -81,9 +82,11 @@ const currentExperience = ref({ title: '', company: '', startDate: '', endDate: 
 const dutiesInput = ref('');
 const currentIndex = ref(-1);
 const experienceStore = useExperienceStore();
+const route = useRoute();
+const id = route.params.id;
 
 onMounted(() => {
-  experienceStore.fetchExperience();
+  experienceStore.fetchExperience(id);
 });
 
 const showEditModal = () => {

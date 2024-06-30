@@ -24,17 +24,20 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue';
 import { useSummaryStore } from '../stores/summaryStore';
+import { useRoute } from 'vue-router';
+
 
 const showModal = ref(false);
 const localSummary = ref('');
 const summaryStore = useSummaryStore();
-
+const route = useRoute();
+const id = route.params.id;
 const summary = ref(summaryStore.summary);
 
 onMounted(async () => {
-  await summaryStore.fetchSummary();
-  summary.value = summaryStore.summary;
-  localSummary.value = summaryStore.summary;
+  await summaryStore.fetchSummary(id);
+  // summary.value = summaryStore.summary;
+  // localSummary.value = summaryStore.summary;
 });
 
 watch(() => summaryStore.summary, (newSummary) => {

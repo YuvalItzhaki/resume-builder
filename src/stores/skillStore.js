@@ -7,21 +7,24 @@ export const useSkillStore = defineStore('skillStore', {
     tech_skills: []
   }),
   actions: {
-    async fetchTechSkills() {
+    async fetchTechSkills(id) {
       const resumeStore = useResumeStore();
       if (!resumeStore.resumeData) {
-        await resumeStore.fetchResume();
+        await resumeStore.fetchResumeById(id);
       }
-      this.tech_skills = resumeStore.resumeData.tech_skills || [];
+      this.tech_skills = resumeStore.resumeData[0]?.tech_skills || [];
     },
+
     addSkill(skill) {
       if (!this.tech_skills.includes(skill)) {
         this.tech_skills.push(skill);
       }
     },
+
     removeSkill(skill) {
       this.tech_skills = this.tech_skills.filter(s => s !== skill);
     },
+
     async saveSkills() {
       try {
         await axios.put('http://localhost:5001/api/resumes/tech_skills', { tech_skills: this.tech_skills });

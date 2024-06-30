@@ -1,13 +1,12 @@
 <template>
   <v-container class="page-container">
-    <v-form  @submit.prevent="handleUpdateResume" ref="form">
+    <v-form @submit.prevent="handleSaveAndPreviewResume" ref="form">
       <v-card class="form-container">
         <v-card-title>
           <span class="headline">Edit Existing Resume Form</span>
         </v-card-title>
         <v-card-text>
           <v-row>
-
             <v-col cols="12">
               <v-text-field
                 v-model="resumeData.profile.name"
@@ -15,7 +14,6 @@
                 required
               ></v-text-field>
             </v-col>
-
             <v-col cols="12">
               <v-text-field
                 v-model="resumeData.profile.title"
@@ -28,7 +26,6 @@
           <v-divider></v-divider>
 
           <v-card-subtitle>Contact</v-card-subtitle>
-
           <v-row>
             <v-col cols="12">
               <v-text-field
@@ -38,7 +35,6 @@
                 required
               ></v-text-field>
             </v-col>
-
             <v-col cols="12">
               <v-text-field
                 v-model="resumeData.contact.phone"
@@ -50,7 +46,6 @@
               ></v-text-field>
               <v-alert v-if="phoneError" type="error">{{ phoneError }}</v-alert>
             </v-col>
-
             <v-col cols="12">
               <v-text-field
                 v-model="resumeData.contact.linkedin"
@@ -58,7 +53,6 @@
                 required
               ></v-text-field>
             </v-col>
-
             <v-col cols="12">
               <v-text-field
                 v-model="resumeData.contact.github"
@@ -71,7 +65,6 @@
           <v-divider></v-divider>
 
           <v-card-subtitle>Tech Skills</v-card-subtitle>
-
           <v-row>
             <v-col cols="12">
               <v-autocomplete
@@ -89,7 +82,6 @@
 
           <v-divider></v-divider>
           <v-card-subtitle>Languages</v-card-subtitle>
-
           <v-row v-for="(lang, langIndex) in resumeData.languages" :key="langIndex">
             <v-col cols="6">
               <v-autocomplete
@@ -112,10 +104,9 @@
           <div class="mb-4">
             <v-btn text @click="addLanguage">Add Language</v-btn>
           </div>
+
           <v-divider></v-divider>
-
           <v-card-subtitle>Education</v-card-subtitle>
-
           <v-row v-for="(edu, index) in resumeData.education" :key="index">
             <v-col cols="12">
               <v-text-field
@@ -170,12 +161,10 @@
             <v-btn text @click="addEducation">Add Education</v-btn>
             <v-btn text @click="removeEducation(index)">Remove</v-btn>
           </div>
-          <v-divider></v-divider>
 
           <v-divider></v-divider>
 
           <v-card-subtitle>Experience</v-card-subtitle>
-
           <v-row v-for="(exp, index) in resumeData.experience" :key="index">
             <v-col cols="12">
               <v-text-field
@@ -217,10 +206,10 @@
             <v-btn text @click="addExperience">Add Experience</v-btn>
             <v-btn text @click="removeExperience(index)">Remove</v-btn>
           </div>
+
           <v-divider></v-divider>
 
           <v-card-subtitle>Profile</v-card-subtitle>
-
           <v-row>
             <v-col cols="12">
               <v-textarea
@@ -233,7 +222,8 @@
         </v-card-text>
 
         <v-card-actions>
-          <v-btn type="update" color="primary">Update Resume</v-btn>
+          <v-btn type="submit" color="primary">Update & Preview Resume</v-btn>
+          <v-btn type="button" color="primary" @click="cancelChanges">Cancel</v-btn>
         </v-card-actions>
       </v-card>
     </v-form>
@@ -241,7 +231,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { techSkillsOptions, languagesOptions } from '../data/data.json';
 import axios from 'axios';
@@ -251,6 +241,7 @@ const route = useRoute();
 const emit = defineEmits(['update']);
 const form = ref(null);
 const resumeData = ref({
+  _id: '',
   profile: {
     name: '',
     title: ''
@@ -289,24 +280,29 @@ onMounted(async () => {
   if (id) {
     try {
       const response = await axios.get(`http://localhost:5001/api/resumes/${id}`);
-      Object.assign(resumeData.value, response.data[0]); // Use Object.assign to keep reactivity
+      Object.assign(resumeData.value, response.data[0]);
       console.log('resumeData from DB is: ', resumeData.value);
+      console.log('Resume ID is: ', resumeData.value._id);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   }
 });
 
-const handleUpdateResume = async () => {
+const handleSaveAndPreviewResume = async () => {
   if (form.value.validate()) {
     try {
       const response = await axios.put(`http://localhost:5001/api/resumes/${id}`, resumeData.value);
       emit('update', response.data);
-      // router.push({ name: 'ResumePreview' });
+      router.push(`/resume-preview/${id}`);
     } catch (error) {
-      console.error('Error updating resume:', error);
+      console.error('Error saving and previewing resume:', error);
     }
   }
+};
+
+const cancelChanges = () => {
+  router.push('/resume-list');
 };
 
 const addLanguage = () => {
@@ -371,9 +367,7 @@ const phoneRule = (value) => {
   const regex = new RegExp(phonePattern);
   return regex.test(value) || 'Invalid phone number format';
 };
-
 </script>
-
 
 <style scoped>
 .page-container {
@@ -410,6 +404,7 @@ const phoneRule = (value) => {
 
 .v-btn {
   margin-top: 15px;
+  flex: 2;
 }
 .mb-4 {
   margin-bottom: 16px;

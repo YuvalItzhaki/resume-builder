@@ -68,19 +68,21 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue';
 import { useEducationStore } from '../stores/educationStore';
+import { useRoute } from 'vue-router';
+const route = useRoute();
+const id = route.params.id;
 
 const showModal = ref(false);
 const isEditing = ref(false);
 const currentEducation = ref({});
 const currentIndex = ref(-1);
+const education = ref([]);
 
 const educationStore = useEducationStore();
 
 onMounted(() => {
-  educationStore.fetchEducation();
+  educationStore.fetchEducation(id);
 });
-
-const education = ref([]);
 
 watch(
   () => educationStore.education,

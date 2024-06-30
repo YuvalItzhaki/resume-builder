@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { useResumeStore } from './resumeStore';
 
-export const useContactStore = defineStore('contact', {
+export const useContactStore = defineStore('contactStore', {
   state: () => ({
     contact: {
       email: '',

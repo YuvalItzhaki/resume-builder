@@ -1,7 +1,5 @@
 <template>
   <div class="resume">
-    <!-- <button @click="editResume('66785e60e3159b3322686ead')">Edit Resume</button>  -->
-    <!-- <div >{{ resumeStore.resumeData[0]._id }}</div> -->
     <aside class="sidebar">
       <section
         class="flex flex-col gap-2 p-4 w-300px bg-gray-500/5 rounded overflow-auto"
@@ -48,7 +46,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import axios from 'axios';
 
 import ProfileSection from './ProfileSection.vue';
 import ContactSection from './ContactSection.vue';
@@ -58,19 +58,20 @@ import ExperienceSection from './ExperienceSection.vue';
 import LanguagesSection from './LanguagesSection.vue';
 import EducationSection from './EducationSection.vue';
 
-// const resumeStore = useResumeStore()
+const route = useRoute();
+const resume = ref({ profile: { name: '', title: '' } });
 
 const sidebarComponents = ref([
-  { name: 'Profile', component: ProfileSection, id: 'profile', data: { /* Profile data */ } },
-  { name: 'Contact', component: ContactSection, id: 'contact', data: { /* Contact data */ } },
-  { name: 'Skills', component: SkillsSection, id: 'skills', data: { /* Skills data */ } },
-  { name: 'Languages', component: LanguagesSection, id: 'languages', data: { /* Languages data */ } },
-  { name: 'Education', component: EducationSection, id: 'education', data: { /* Education data */ } },
+  { name: 'Profile', component: ProfileSection, id: 'profile', data: {} },
+  { name: 'Contact', component: ContactSection, id: 'contact', data: {} },
+  { name: 'Skills', component: SkillsSection, id: 'skills', data: {} },
+  { name: 'Languages', component: LanguagesSection, id: 'languages', data: {} },
+  { name: 'Education', component: EducationSection, id: 'education', data: {} },
 ]);
 
 const mainComponents = ref([
-  { name: 'Summary', component: SummarySection, id: 'summary', data: { /* Summary data */ } },
-  { name: 'Experience', component: ExperienceSection, id: 'experience', data: { /* Experience data */ } },
+  { name: 'Summary', component: SummarySection, id: 'summary', data: {} },
+  { name: 'Experience', component: ExperienceSection, id: 'experience', data: {} },
 ]);
 
 const draggingComponent = ref(null);
@@ -97,11 +98,9 @@ function dropItem(target) {
   const targetList = target === 'sidebar' ? sidebarComponents.value : mainComponents.value;
 
   if (draggingSource.value === target) {
-    // Reordering within the same list
     sourceList.splice(draggingIndex.value, 1);
     targetList.splice(targetIndex.value !== null ? targetIndex.value : targetList.length, 0, draggingComponent.value);
   } else {
-    // Moving between different lists
     sourceList.splice(draggingIndex.value, 1);
     targetList.splice(targetIndex.value !== null ? targetIndex.value : targetList.length, 0, draggingComponent.value);
   }
@@ -111,12 +110,37 @@ function dropItem(target) {
   draggingIndex.value = null;
   targetIndex.value = null;
 }
-// import { useResumeStore } from '../stores/resumeStore';
-// function editResume(id){
-//   const resumeStore = useResumeStore()
-//   resumeStore.fetchResumeById(id)
-//   console.log('llllll', resumeStore.resumeData)
-// }
+
+onMounted(async () => {
+  const id = route.params.id;
+  try {
+    const response = await axios.get(`http://localhost:5001/api/resumes/${id}`);
+    resume.value = response.data[0];
+
+    // Detailed logging
+    // console.log('Fetched resume data:', resumeData);
+
+    // // Update the sidebar and main components with the fetched data
+    // sidebarComponents.value.find(item => item.id === 'profile').data = resumeData.profile || {};
+    // sidebarComponents.value.find(item => item.id === 'contact').data = resumeData.contact || {};
+    // sidebarComponents.value.find(item => item.id === 'skills').data = resumeData.tech_skills || {};
+    // sidebarComponents.value.find(item => item.id === 'languages').data = resumeData.languages || {};
+    // sidebarComponents.value.find(item => item.id === 'education').data = resumeData.education || {};
+    // mainComponents.value.find(item => item.id === 'summary').data = resumeData.summary || {};
+    // mainComponents.value.find(item => item.id === 'experience').data = resumeData.experience || {};
+
+    // console.log('Fetched contact:', resumeData[0].contact);
+
+
+
+    // // Logging after assignment
+    // console.log('Sidebar components after data assignment:', sidebarComponents.value);
+    // console.log('Main components after data assignment:', mainComponents.value);
+
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+});
 </script>
 
 <style scoped>

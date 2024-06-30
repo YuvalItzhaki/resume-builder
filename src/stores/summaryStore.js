@@ -8,24 +8,18 @@ export const useSummaryStore = defineStore('summaryStore', {
   }),
 
   actions: {
-    async fetchSummary() {
+    async fetchSummary(id) {
       const resumeStore = useResumeStore();
       if (!resumeStore.resumeData) {
-        await resumeStore.fetchResume();
+        await resumeStore.fetchResumeById(id);
       }
-      this.summary = resumeStore.resumeData.summary;
+      this.summary = resumeStore.resumeData[0]?.summary || '';
     },
-    // async fetchSummary() {
-    //   try {
-    //     const response = await axios.get('http://localhost:5001/api/resumes');
-    //     this.summary = response.data.summary;
-    //   } catch (error) {
-    //     console.error('Failed to fetch summary:', error);
-    //   }
-    // },
-    async saveSummary() {
+
+    async saveSummary(id) {
       try {
-        await axios.put('http://localhost:5001/api/resumes/summary', { summary: this.summary });
+        const resumeStore = useResumeStore();
+        await resumeStore.saveResumeById(this.summary, id);
         console.log('Summary saved successfully', this.summary);
       } catch (error) {
         console.error('Failed to save summary:', error);
