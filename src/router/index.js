@@ -36,6 +36,7 @@ const routes = [
     path: '/resume-preview/:id',
     name: 'ResumePreview',
     component: ResumePreview,
+    // props: route => ({ data: route.query.data ? JSON.parse(route.query.data) : null })
   },
   {
     path: '/resume-list',
