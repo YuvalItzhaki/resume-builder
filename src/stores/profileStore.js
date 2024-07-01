@@ -15,13 +15,15 @@ export const useProfileStore = defineStore('profileStore', {
       const resumeStore = useResumeStore();
       if (!resumeStore.resumeData) {
         await resumeStore.fetchResumeById(id);
+        this.profile = resumeStore.resumeData[0]?.profile || {};
+        console.log('this.profile:', this.profile)
       }
-      this.profile = resumeStore.resumeData[0]?.profile || {};
     },
 
     setProfile(newProfile) {
       this.profile = newProfile;
     },
+
     async saveProfile() {
       try {
         await axios.put('http://localhost:5001/api/resumes/profile', { profile: this.profile });

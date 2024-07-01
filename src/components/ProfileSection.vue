@@ -43,10 +43,11 @@ const profile = ref({ ...profileStore.profile });
 
 onMounted(() => {
   profileStore.fetchProfile(id);
-  // watch(() => profileStore.profile, (newProfile) => {
-  //   profile.value = { ...newProfile };
-  // });
 });
+
+watch(() => profileStore.profile, (newProfile) => {
+    profile.value = { ...newProfile };
+  });
 
 const editProfile = () => {
   showModal.value = true;
