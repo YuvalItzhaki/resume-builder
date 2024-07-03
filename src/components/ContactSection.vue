@@ -29,10 +29,10 @@
         <a :href="contact.github" target="_blank" v-else>GitHub</a>
       </label>
     </p>
-    <button @click="editContact">Edit</button>
+    <!-- <button @click="editContact">Edit</button> -->
 
     <!-- Modal -->
-    <div v-if="showModal" class="edit-modal">
+    <!-- <div v-if="showModal" class="edit-modal">
       <div class="modal-content">
         <h2>Edit Contact</h2>
         <p>
@@ -62,7 +62,7 @@
         <button @click="saveEdit">Save </button>
         <button @click="cancelEdit">Cancel </button>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -92,23 +92,23 @@ watch(
   { deep: true }
 );
 
-const editContact = () => {
-  showModal.value = true;
-  isEditing.value = true;
-};
+// const editContact = () => {
+//   showModal.value = true;
+//   isEditing.value = true;
+// };
 
-const saveEdit = () => {
-  contactStore.setContact(contact.value);
-  contactStore.saveContact(id);
-  showModal.value = false;
-  isEditing.value = false;
-};
+// const saveEdit = () => {
+//   contactStore.setContact(contact.value);
+//   contactStore.saveContact(id);
+//   showModal.value = false;
+//   isEditing.value = false;
+// };
 
-const cancelEdit = () => {
-  contact.value = { ...contactStore.contact };
-  showModal.value = false;
-  isEditing.value = false;
-};
+// const cancelEdit = () => {
+//   contact.value = { ...contactStore.contact };
+//   showModal.value = false;
+//   isEditing.value = false;
+// };
 </script>
 
 <style scoped>

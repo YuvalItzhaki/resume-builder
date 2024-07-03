@@ -1,7 +1,8 @@
 <!-- src/views/ResumePreview.vue -->
 <template>
     <div>
-      <h1>Resume Preview</h1>
+      <h1 class="headline">Resume Preview</h1>
+      <el-divider></el-divider>
       <ResumePreview />
     </div>
   </template>
@@ -13,6 +14,12 @@
   </script>
   
   <style scoped>
-  /* Component-specific styles */
-  </style>
+  .headline{
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 30px;
+      display: flex;
+      justify-content: center; 
+      color: red;
+    }   
+   </style>
   

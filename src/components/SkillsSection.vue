@@ -6,10 +6,10 @@
       <li v-for="skill in techSkills" :key="skill">{{ skill }}</li>
     </ul>
   </div>
-    <button @click="editSkills">Edit</button>
+    <!-- <button @click="editSkills">Edit</button> -->
 
     <!-- Modal -->
-    <div v-if="showModal" class="edit-modal">
+    <!-- <div v-if="showModal" class="edit-modal">
       <div class="modal-content">
         <h2>Edit Skills</h2>
         <div>
@@ -34,7 +34,7 @@
         <button @click="saveEdit">Save</button>
         <button @click="cancelEdit">Cancel</button>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -62,36 +62,37 @@ onMounted(async () => {
   predefinedSkills.value = response.techSkillsOptions;
 });
 
-const editSkills = () => {
-  showModal.value = true;
-};
+// const editSkills = () => {
+//   showModal.value = true;
+// };
 
-const addSkill = () => {
-  if (newSkill.value.trim()) {
-    skillStore.addSkill(newSkill.value.trim());
-    newSkill.value = '';
-  }
-};
+// const addSkill = () => {
+//   if (newSkill.value.trim()) {
+//     skillStore.addSkill(newSkill.value.trim());
+//     newSkill.value = '';
+//   }
+// };
 
-const addPredefinedSkill = () => {
-  if (selectedPredefinedSkill.value) {
-    skillStore.addSkill(selectedPredefinedSkill.value);
-    selectedPredefinedSkill.value = '';
-  }
-};
+// const addPredefinedSkill = () => {
+//   if (selectedPredefinedSkill.value) {
+//     skillStore.addSkill(selectedPredefinedSkill.value);
+//     selectedPredefinedSkill.value = '';
+//   }
+// };
 
-const removeSkill = (skill) => {
-  skillStore.removeSkill(skill);
-};
+// const removeSkill = (skill) => {
+//   skillStore.removeSkill(skill);
+// };
 
-const saveEdit = () => {
-  skillStore.saveSkills();
-  showModal.value = false;
-};
+// const saveEdit = () => {
+//   skillStore.saveSkills();
+//   showModal.value = false;
+// };
 
-const cancelEdit = () => {
-  showModal.value = false;
-};
+// const cancelEdit = () => {
+//   showModal.value = false;
+// };
+
 </script>
 
 <style scoped>

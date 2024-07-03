@@ -11,14 +11,13 @@
         </div>
       </li>
     </ul>
-    <button @click="showEditModal">Edit</button>
+    <!-- <button @click="showEditModal">Edit</button> -->
 
     <!-- Modal -->
-    <div v-if="showModal" class="edit-modal">
+    <!-- <div v-if="showModal" class="edit-modal">
       <div class="modal-content">
         <h2>Edit Education</h2>
         
-        <!-- Edit Existing Education Section -->
         <div v-if="education.length">
           <h3>Choose existing education to edit</h3>
           <ul>
@@ -31,7 +30,6 @@
           </ul>
         </div>
 
-        <!-- Add or Edit Education Details -->
         <h3>{{ isEditing ? 'Edit existion details' : 'Add new education' }}</h3>
         <p>
           <label for="modal-edu-institution">
@@ -61,7 +59,7 @@
         <button @click="cancelEdit">Cancel</button>
         <button @click="prepareNewEducation">Add New Education</button>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -92,40 +90,40 @@ watch(
   { deep: true }
 );
 
-const showEditModal = () => {
-  showModal.value = true;
-  isEditing.value = false;
-  currentEducation.value = { institution: '', degree: '', startDate: '', endDate: '' };
-};
+// const showEditModal = () => {
+//   showModal.value = true;
+//   isEditing.value = false;
+//   currentEducation.value = { institution: '', degree: '', startDate: '', endDate: '' };
+// };
 
-const prepareNewEducation = () => {
-  currentIndex.value = -1;
-  currentEducation.value = { institution: '', degree: '', startDate: '', endDate: '' };
-  isEditing.value = false;
-};
+// const prepareNewEducation = () => {
+//   currentIndex.value = -1;
+//   currentEducation.value = { institution: '', degree: '', startDate: '', endDate: '' };
+//   isEditing.value = false;
+// };
 
-const editEducation = (index) => {
-  currentIndex.value = index;
-  currentEducation.value = { ...education.value[index] };
-  isEditing.value = true;
-};
+// const editEducation = (index) => {
+//   currentIndex.value = index;
+//   currentEducation.value = { ...education.value[index] };
+//   isEditing.value = true;
+// };
 
-const saveEducation = () => {
-  if (isEditing.value && currentIndex.value >= 0) {
-    // Edit existing education
-    education.value[currentIndex.value] = { ...currentEducation.value };
-  } else {
-    // Add new education
-    education.value.push({ ...currentEducation.value });
-  }
-  educationStore.setEducation(education.value);
-  educationStore.saveEducation();
-  showModal.value = false;
-};
+// const saveEducation = () => {
+//   if (isEditing.value && currentIndex.value >= 0) {
+//     // Edit existing education
+//     education.value[currentIndex.value] = { ...currentEducation.value };
+//   } else {
+//     // Add new education
+//     education.value.push({ ...currentEducation.value });
+//   }
+//   educationStore.setEducation(education.value);
+//   educationStore.saveEducation();
+//   showModal.value = false;
+// };
 
-const cancelEdit = () => {
-  showModal.value = false;
-};
+// const cancelEdit = () => {
+//   showModal.value = false;
+// };
 </script>
 
 <style scoped>

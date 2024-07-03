@@ -4,10 +4,10 @@
     <p>{{ profile.title }}</p>
   </div>
   <div>
-    <button @click="editProfile">Edit</button>
+    <!-- <button @click="editProfile">Edit</button> -->
 
     <!-- Modal -->
-    <div v-if="showModal" class="edit-modal">
+    <!-- <div v-if="showModal" class="edit-modal">
       <div class="modal-content">
         <h2>Edit Profile</h2>
         <p>
@@ -25,7 +25,7 @@
         <button @click="saveEdit">Save</button>
         <button @click="cancelEdit">Cancel</button>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -49,20 +49,21 @@ watch(() => profileStore.profile, (newProfile) => {
     profile.value = { ...newProfile };
   });
 
-const editProfile = () => {
-  showModal.value = true;
-};
+// const editProfile = () => {
+//   showModal.value = true;
+// };
 
-const saveEdit = async () => {
-  profileStore.setProfile(profile.value);
-  await profileStore.saveProfile();
-  showModal.value = false;
-};
+// const saveEdit = async () => {
+//   profileStore.setProfile(profile.value);
+//   await profileStore.saveProfile();
+//   showModal.value = false;
+// };
 
-const cancelEdit = () => {
-  profile.value = { ...profileStore.profile };
-  showModal.value = false;
-};
+// const cancelEdit = () => {
+//   profile.value = { ...profileStore.profile };
+//   showModal.value = false;
+// };
+
 </script>
 
 <style scoped>

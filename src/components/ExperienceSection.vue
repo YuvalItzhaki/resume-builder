@@ -8,14 +8,13 @@
         <li v-for="duty in job.duties" :key="duty">{{ duty }}</li>
       </ul>
     </div>
-    <button @click="showEditModal">Edit</button>
+    <!-- <button @click="showEditModal">Edit</button> -->
 
     <!-- Modal -->
-    <div v-if="showModal" class="edit-modal">
+    <!-- <div v-if="showModal" class="edit-modal">
       <div class="modal-content">
         <h2>Edit Experience</h2>
 
-        <!-- Edit Existing Experience Section -->
         <div v-if="experienceStore.experience.length">
           <h3>Choose existing experience to edit</h3>
           <ul>
@@ -31,7 +30,6 @@
           </ul>
         </div>
 
-        <!-- Add or Edit Experience Details -->
         <h3>{{ isEditing ? 'Edit Existing Experience' : 'Add New Experience' }}</h3>
         <p>
           <label for="modal-title">
@@ -67,7 +65,7 @@
         <button @click="cancelEdit">Cancel</button>
         <button @click="prepareNewExperience">Add New Experience</button>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -89,44 +87,45 @@ onMounted(() => {
   experienceStore.fetchExperience(id);
 });
 
-const showEditModal = () => {
-  showModal.value = true;
-  isEditing.value = false;
-  currentExperience.value = { title: '', company: '', startDate: '', endDate: '', duties: [] };
-  dutiesInput.value = '';
-};
+// const showEditModal = () => {
+//   showModal.value = true;
+//   isEditing.value = false;
+//   currentExperience.value = { title: '', company: '', startDate: '', endDate: '', duties: [] };
+//   dutiesInput.value = '';
+// };
 
-const editExperience = (index) => {
-  currentIndex.value = index;
-  currentExperience.value = { ...experienceStore.experience[index] };
-  dutiesInput.value = currentExperience.value.duties.join(', ');
-  isEditing.value = true;
-};
+// const editExperience = (index) => {
+//   currentIndex.value = index;
+//   currentExperience.value = { ...experienceStore.experience[index] };
+//   dutiesInput.value = currentExperience.value.duties.join(', ');
+//   isEditing.value = true;
+// };
 
-const prepareNewExperience = () => {
-  currentIndex.value = -1;
-  currentExperience.value = { title: '', company: '', startDate: '', endDate: '', duties: [] };
-  dutiesInput.value = '';
-  isEditing.value = false;
-};
+// const prepareNewExperience = () => {
+//   currentIndex.value = -1;
+//   currentExperience.value = { title: '', company: '', startDate: '', endDate: '', duties: [] };
+//   dutiesInput.value = '';
+//   isEditing.value = false;
+// };
 
-const saveExperience = () => {
-  currentExperience.value.duties = dutiesInput.value.split(',').map(duty => duty.trim());
+// const saveExperience = () => {
+//   currentExperience.value.duties = dutiesInput.value.split(',').map(duty => duty.trim());
 
-  if (isEditing.value && currentIndex.value >= 0) {
-    experienceStore.experience[currentIndex.value] = { ...currentExperience.value };
-  } else {
-    experienceStore.experience.push({ ...currentExperience.value });
-  }
+//   if (isEditing.value && currentIndex.value >= 0) {
+//     experienceStore.experience[currentIndex.value] = { ...currentExperience.value };
+//   } else {
+//     experienceStore.experience.push({ ...currentExperience.value });
+//   }
 
-  experienceStore.setExperience(experienceStore.experience);
-  experienceStore.saveExperience();
-  showModal.value = false;
-};
+//   experienceStore.setExperience(experienceStore.experience);
+//   experienceStore.saveExperience();
+//   showModal.value = false;
+// };
 
-const cancelEdit = () => {
-  showModal.value = false;
-};
+// const cancelEdit = () => {
+//   showModal.value = false;
+// };
+
 </script>
 
 <style scoped>

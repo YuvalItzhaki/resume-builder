@@ -2,10 +2,10 @@
   <div class="summary-section">
     <h2>SUMMARY</h2>
     <p>{{ summary }}</p>
-    <button @click="editSummary">Edit</button>
+    <!-- <button @click="editSummary">Edit</button> -->
 
     <!-- Modal -->
-    <div v-if="showModal" class="edit-modal">
+    <!-- <div v-if="showModal" class="edit-modal">
       <div class="modal-content">
         <h2>Edit Summary</h2>
         <p>
@@ -17,7 +17,7 @@
         <button @click="saveEdit">Save</button>
         <button @click="cancelEdit">Cancel</button>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -45,22 +45,23 @@ watch(() => summaryStore.summary, (newSummary) => {
   localSummary.value = newSummary;
 });
 
-const editSummary = () => {
-  localSummary.value = summary.value;
-  showModal.value = true;
-};
+// const editSummary = () => {
+//   localSummary.value = summary.value;
+//   showModal.value = true;
+// };
 
-const saveEdit = async () => {
-  summaryStore.summary = localSummary.value;
-  await summaryStore.saveSummary();
-  summary.value = summaryStore.summary;
-  showModal.value = false;
-};
+// const saveEdit = async () => {
+//   summaryStore.summary = localSummary.value;
+//   await summaryStore.saveSummary();
+//   summary.value = summaryStore.summary;
+//   showModal.value = false;
+// };
 
-const cancelEdit = () => {
-  localSummary.value = summaryStore.summary;
-  showModal.value = false;
-};
+// const cancelEdit = () => {
+//   localSummary.value = summaryStore.summary;
+//   showModal.value = false;
+// };
+
 </script>
 
 <style scoped>

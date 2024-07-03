@@ -5,10 +5,10 @@
         <li v-for="language in languages" :key="language"><strong>{{ language.value }}</strong> | {{ language.level }}</li>
       </ul>
     </div>
-    <button @click="editLanguages">Edit</button>
+    <!-- <button @click="editLanguages">Edit</button> -->
 
     <!-- Modal -->
-    <div v-if="showModal" class="edit-modal">
+    <!-- <div v-if="showModal" class="edit-modal">
       <div class="modal-content">
         <h2>Edit Languages</h2>
         <div>
@@ -39,7 +39,7 @@
         <button @click="saveEdit">Save</button>
         <button @click="cancelEdit">Cancel</button>
       </div>
-    </div>
+    </div> -->
   </template>
   
   <script setup>
@@ -65,39 +65,40 @@ onMounted(() => {
   predefinedLanguage.value = languagesOptions.languagesOptions;
 });
 
-const editLanguages = () => {
-  showModal.value = true;
-};
+// const editLanguages = () => {
+//   showModal.value = true;
+// };
 
-const addLanguage = () => {
-  if (newLanguage.value.trim() && newLanguage.level.trim()) {
-    languageStore.addLanguages({ value: newLanguage.value.trim(), level: newLanguage.level.trim() });
-    newLanguage.value = {};
-    newLanguage.level = {};
-  }
-};
+// const addLanguage = () => {
+//   if (newLanguage.value.trim() && newLanguage.level.trim()) {
+//     languageStore.addLanguages({ value: newLanguage.value.trim(), level: newLanguage.level.trim() });
+//     newLanguage.value = {};
+//     newLanguage.level = {};
+//   }
+// };
 
-const addPredefinedLanguage = () => {
-  if (selectedLanguage.value && selectedLevel.value) {
-    console.log(selectedLanguage.value, selectedLevel.value)
-    languageStore.addLanguages({ value: selectedLanguage.value.value, level: selectedLevel.value });
-    selectedLanguage.value = null;
-    selectedLevel.value = '';
-  }
-};
+// const addPredefinedLanguage = () => {
+//   if (selectedLanguage.value && selectedLevel.value) {
+//     console.log(selectedLanguage.value, selectedLevel.value)
+//     languageStore.addLanguages({ value: selectedLanguage.value.value, level: selectedLevel.value });
+//     selectedLanguage.value = null;
+//     selectedLevel.value = '';
+//   }
+// };
 
-const removeLanguage = (language) => {
-  languageStore.removeLanguage(language);
-};
+// const removeLanguage = (language) => {
+//   languageStore.removeLanguage(language);
+// };
 
-const saveEdit = () => {
-  languageStore.saveLanguages();
-  showModal.value = false;
-};
+// const saveEdit = () => {
+//   languageStore.saveLanguages();
+//   showModal.value = false;
+// };
 
-const cancelEdit = () => {
-  showModal.value = false;
-};
+// const cancelEdit = () => {
+//   showModal.value = false;
+// };
+
 </script>
 
 <style scoped>
