@@ -1,233 +1,137 @@
 <template>
-  <v-container class="page-container">
-    <v-form @submit.prevent="handleSaveAndPreviewResume" ref="form">
-      <v-card class="form-container">
-        <v-card-title>
+  <div class="page-container">
+    <el-form :model="resumeData" ref="form" @submit.native.prevent="handleSaveAndPreviewResume" label-position="top" class="form-aligned-right">
+      <el-card class="form-container">
+        <div slot="header">
           <span class="headline">Edit Existing Resume Form</span>
-        </v-card-title>
-        <v-card-text>
-          <v-row>
-            <v-col cols="12">
-              <v-text-field
-                v-model="resumeData.profile.name"
-                label="Name"
-                required
-              ></v-text-field>
-            </v-col>
-            <v-col cols="12">
-              <v-text-field
-                v-model="resumeData.profile.title"
-                label="Title"
-                required
-              ></v-text-field>
-            </v-col>
-          </v-row>
+        </div>
 
-          <v-divider></v-divider>
+        <el-form-item label="Name" :rules="[{ required: true, message: 'Name is required', trigger: 'blur' }]">
+          <el-input v-model="resumeData.profile.name"></el-input>
+        </el-form-item>
 
-          <v-card-subtitle>Contact</v-card-subtitle>
-          <v-row>
-            <v-col cols="12">
-              <v-text-field
-                v-model="resumeData.contact.email"
-                label="Email"
-                type="email"
-                required
-              ></v-text-field>
-            </v-col>
-            <v-col cols="12">
-              <v-text-field
-                v-model="resumeData.contact.phone"
-                label="Phone"
-                type="tel"
-                required
-                :rules="[phoneRule]"
-                placeholder="+14155552671"
-              ></v-text-field>
-              <v-alert v-if="phoneError" type="error">{{ phoneError }}</v-alert>
-            </v-col>
-            <v-col cols="12">
-              <v-text-field
-                v-model="resumeData.contact.linkedin"
-                label="LinkedIn"
-                required
-              ></v-text-field>
-            </v-col>
-            <v-col cols="12">
-              <v-text-field
-                v-model="resumeData.contact.github"
-                label="GitHub"
-                required
-              ></v-text-field>
-            </v-col>
-          </v-row>
+        <el-form-item label="Title" :rules="[{ required: true, message: 'Title is required', trigger: 'blur' }]">
+          <el-input v-model="resumeData.profile.title"></el-input>
+        </el-form-item>
 
-          <v-divider></v-divider>
+        <el-divider></el-divider>
 
-          <v-card-subtitle>Tech Skills</v-card-subtitle>
-          <v-row>
-            <v-col cols="12">
-              <v-autocomplete
-                v-model="resumeData.tech_skills"
-                :items="techSkillsOptions"
-                item-title="label"
-                item-value="value"
-                label="Tech Skills"
-                multiple
-                chips
-                required
-              ></v-autocomplete>
-            </v-col>
-          </v-row>
+        <div class="sub-title">Contact</div>
 
-          <v-divider></v-divider>
-          <v-card-subtitle>Languages</v-card-subtitle>
-          <v-row v-for="(lang, langIndex) in resumeData.languages" :key="langIndex">
-            <v-col cols="6">
-              <v-autocomplete
-                v-model="lang.value"
-                :items="languagesOptions.map(l => l.value)"
-                label="Language"
-                @input="updateLanguageLevel(langIndex)"
-                required
-              ></v-autocomplete>
-            </v-col>
-            <v-col cols="6">
-              <v-autocomplete
-                v-model="lang.level"
-                :items="getLanguageLevels(lang.value)"
-                label="Proficiency Level"
-                required
-              ></v-autocomplete>
-            </v-col>
-          </v-row>
-          <div class="mb-4">
-            <v-btn text @click="addLanguage">Add Language</v-btn>
+        <el-form-item label="Email" :rules="[{ required: true, type: 'email', message: 'Email is required', trigger: 'blur' }]">
+          <el-input v-model="resumeData.contact.email"></el-input>
+        </el-form-item>
+
+        <el-form-item label="Phone" :rules="[{ required: true, validator: phoneRule, trigger: 'blur' }]">
+          <el-input v-model="resumeData.contact.phone" placeholder="+14155552671"></el-input>
+        </el-form-item>
+        <el-alert v-if="phoneError" type="error">{{ phoneError }}</el-alert>
+
+        <el-form-item label="LinkedIn" :rules="[{ required: true, message: 'LinkedIn is required', trigger: 'blur' }]">
+          <el-input v-model="resumeData.contact.linkedin"></el-input>
+        </el-form-item>
+
+        <el-form-item label="GitHub" :rules="[{ required: true, message: 'GitHub is required', trigger: 'blur' }]">
+          <el-input v-model="resumeData.contact.github"></el-input>
+        </el-form-item>
+
+        <el-divider></el-divider>
+
+        <div class="sub-title">Tech Skills</div>
+
+        <el-form-item label="Tech Skills" :rules="[{ required: true, message: 'Tech Skills are required', trigger: 'change' }]">
+          <el-select v-model="resumeData.tech_skills" multiple filterable>
+            <el-option v-for="skill in techSkillsOptions" :key="skill.value" :label="skill.label" :value="skill.value"></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-divider></el-divider>
+
+        <div class="sub-title">Languages</div>
+
+        <div v-for="(lang, langIndex) in resumeData.languages" :key="langIndex" class="language-row">
+          <el-form-item :label="'Language ' + (langIndex + 1)">
+            <el-select v-model="lang.value" filterable @change="updateLanguageLevel(langIndex)">
+              <el-option v-for="option in languagesOptions" :key="option.value" :label="option.label" :value="option.value"></el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item :label="'Proficiency Level ' + (langIndex + 1)">
+            <el-select v-model="lang.level" filterable>
+              <el-option v-for="level in getLanguageLevels(lang.value)" :key="level" :label="level" :value="level"></el-option>
+            </el-select>
+          </el-form-item>
+        </div>
+        <el-button type="text" @click="addLanguage">Add Language</el-button>
+
+        <el-divider></el-divider>
+
+        <div class="sub-title">Education</div>
+
+        <div v-for="(edu, index) in resumeData.education" :key="index" class="education-row">
+          <el-form-item :label="'Institution ' + (index + 1)">
+            <el-input v-model="edu.institution"></el-input>
+          </el-form-item>
+
+          <el-form-item :label="'Degree ' + (index + 1)">
+            <el-input v-model="edu.degree"></el-input>
+          </el-form-item>
+          <div class="datePicker">
+            <el-form-item label="Start Date">
+              <el-date-picker v-model="edu.startDate" type="date" format="YYYY-MM-DD" value-format="YYYY-MM-DD" :picker-options="pickerOptions"></el-date-picker>
+            </el-form-item>
+            <el-form-item label="End Date">
+              <el-date-picker v-model="edu.endDate" type="date" format="YYYY-MM-DD" value-format="YYYY-MM-DD" :picker-options="pickerOptions"></el-date-picker>
+            </el-form-item>
           </div>
 
-          <v-divider></v-divider>
-          <v-card-subtitle>Education</v-card-subtitle>
-          <v-row v-for="(edu, index) in resumeData.education" :key="index">
-            <v-col cols="12">
-              <v-text-field
-                v-model="edu.institution"
-                :label="'Institution ' + (index + 1)"
-                required
-              ></v-text-field>
-            </v-col>
-            <v-col cols="12">
-              <v-text-field
-                v-model="edu.degree"
-                :label="'Degree ' + (index + 1)"
-                required
-              ></v-text-field>
-            </v-col>
-            <v-col cols="6">
-              <v-text-field
-                v-model="edu.startDate"
-                :label="'Start Date ' + (index + 1)"
-                outlined
-                readonly
-                @click="openDatePicker(index, 'start')"
-                required
-              ></v-text-field>
-              <v-date-picker
-                v-if="edu.showStartDatePicker"
-                v-model="edu.startDate"
-                :label="'Start Date ' + (index + 1)"
-                @input="closeDatePicker(index, 'start')"
-                ref="datePickerStart"
-              ></v-date-picker>
-            </v-col>
-            <v-col cols="6">
-              <v-text-field
-                v-model="edu.endDate"
-                :label="'End Date ' + (index + 1)"
-                outlined
-                readonly
-                @click="openDatePicker(index, 'end')"
-                required
-              ></v-text-field>
-              <v-date-picker
-                v-if="edu.showEndDatePicker"
-                v-model="edu.endDate"
-                :label="'End Date ' + (index + 1)"
-                @input="closeDatePicker(index, 'end')"
-                ref="datePickerEnd"
-              ></v-date-picker>
-            </v-col>
-          </v-row>
-          <div class="mb-4">
-            <v-btn text @click="addEducation">Add Education</v-btn>
-            <v-btn text @click="removeEducation(index)">Remove</v-btn>
+          <el-button type="text" @click="removeEducation(index)">Remove</el-button>
+        </div>
+        <el-button type="text" @click="addEducation">Add Education</el-button>
+
+        <el-divider></el-divider>
+
+        <div class="sub-title">Experience</div>
+
+        <div v-for="(exp, index) in resumeData.experience" :key="index" class="experience-row">
+          <el-form-item :label="'Title ' + (index + 1)">
+            <el-input v-model="exp.title"></el-input>
+          </el-form-item>
+
+          <el-form-item :label="'Company ' + (index + 1)">
+            <el-input v-model="exp.company"></el-input>
+          </el-form-item>
+          <div class="datePicker">
+            <el-form-item label="Start Date">
+              <el-date-picker v-model="exp.startDate" type="date" format="YYYY-MM-DD" value-format="YYYY-MM-DD" :picker-options="pickerOptions"></el-date-picker>
+            </el-form-item>
+            <el-form-item label="End Date">
+              <el-date-picker v-model="exp.endDate" type="date" format="YYYY-MM-DD" value-format="YYYY-MM-DD" :picker-options="pickerOptions"></el-date-picker>
+            </el-form-item>
           </div>
+          <el-form-item :label="'Duties ' + (index + 1)">
+            <el-input type="textarea" v-model="exp.duties"></el-input>
+          </el-form-item>
 
-          <v-divider></v-divider>
+          <el-button type="text" @click="removeExperience(index)">Remove</el-button>
+        </div>
+        <el-button type="text" @click="addExperience">Add Experience</el-button>
 
-          <v-card-subtitle>Experience</v-card-subtitle>
-          <v-row v-for="(exp, index) in resumeData.experience" :key="index">
-            <v-col cols="12">
-              <v-text-field
-                v-model="exp.title"
-                :label="'Title ' + (index + 1)"
-                required
-              ></v-text-field>
-            </v-col>
-            <v-col cols="12">
-              <v-text-field
-                v-model="exp.company"
-                :label="'Company ' + (index + 1)"
-                required
-              ></v-text-field>
-            </v-col>
-            <v-col cols="6">
-              <v-text-field
-                v-model="exp.startDate"
-                :label="'Start Date ' + (index + 1)"
-                required
-              ></v-text-field>
-            </v-col>
-            <v-col cols="6">
-              <v-text-field
-                v-model="exp.endDate"
-                :label="'End Date ' + (index + 1)"
-                required
-              ></v-text-field>
-            </v-col>
-            <v-col cols="12">
-              <v-textarea
-                v-model="exp.duties"
-                :label="'Duties ' + (index + 1)"
-                required
-              ></v-textarea>
-            </v-col>
-          </v-row>
-          <div class="mb-4">
-            <v-btn text @click="addExperience">Add Experience</v-btn>
-            <v-btn text @click="removeExperience(index)">Remove</v-btn>
-          </div>
+        <el-divider></el-divider>
 
-          <v-divider></v-divider>
+        <div class="sub-title">Profile</div>
 
-          <v-card-subtitle>Profile</v-card-subtitle>
-          <v-row>
-            <v-col cols="12">
-              <v-textarea
-                v-model="resumeData.summary"
-                label="Summary"
-                required
-              ></v-textarea>
-            </v-col>
-          </v-row>
-        </v-card-text>
+        <el-form-item label="Summary" :rules="[{ required: true, message: 'Summary is required', trigger: 'blur' }]">
+          <el-input type="textarea" v-model="resumeData.summary"></el-input>
+        </el-form-item>
 
-        <v-card-actions>
-          <v-btn type="submit" color="primary">Update & Preview Resume</v-btn>
-          <v-btn type="button" color="primary" @click="cancelChanges">Cancel</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-form>
-  </v-container>
+        <el-card-actions>
+          <el-button type="primary" native-type="submit">Update & Preview Resume</el-button>
+          <el-button type="default" @click="cancelChanges">Cancel</el-button>
+        </el-card-actions>
+      </el-card>
+    </el-form>
+  </div>
 </template>
 
 <script setup>
@@ -238,8 +142,8 @@ import axios from 'axios';
 
 const router = useRouter();
 const route = useRoute();
-const emit = defineEmits(['update']);
 const form = ref(null);
+const emit = defineEmits(['update']);
 const resumeData = ref({
   _id: '',
   profile: {
@@ -257,10 +161,8 @@ const resumeData = ref({
   education: [{
     institution: '',
     degree: '',
-    startDate: null,
-    endDate: null,
-    showStartDatePicker: false,
-    showEndDatePicker: false
+    startDate: '',
+    endDate: ''
   }],
   experience: [{
     title: '',
@@ -281,71 +183,58 @@ onMounted(async () => {
     try {
       const response = await axios.get(`http://localhost:5001/api/resumes/${id}`);
       Object.assign(resumeData.value, response.data[0]);
-      console.log('resumeData from DB is: ', resumeData.value);
-      console.log('Resume ID is: ', resumeData.value._id);
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error(error);
     }
   }
 });
 
-const handleSaveAndPreviewResume = async () => {
-  if (form.value.validate()) {
-    try {
-      const response = await axios.put(`http://localhost:5001/api/resumes/${id}`, resumeData.value);
-      emit('update', response.data);
-      router.push(`/resume-preview/${id}`);
-    } catch (error) {
-      console.error('Error saving and previewing resume:', error);
-    }
+const phoneRule = (rule, value, callback) => {
+  if (value.match(phonePattern)) {
+    phoneError.value = '';
+    callback();
+  } else {
+    phoneError.value = 'Phone number format is invalid';
+    callback(new Error('Phone number format is invalid'));
   }
 };
 
-const cancelChanges = () => {
-  router.push('/resume-list');
+const handleSaveAndPreviewResume = async () => {
+  try {
+
+     const putResponse = await axios.put(`http://localhost:5001/api/resumes/${id}`, resumeData.value);
+     emit('update', putResponse.data);
+     
+     const getResponse = await axios.get(`http://localhost:5001/api/resumes/${id}`);
+     Object.assign(resumeData.value, getResponse.data[0]);
+     router.push({
+      path: `/resume-preview/${id}`,
+      state: { resumeData: resumeData.value }
+      
+    });
+      console.log('resumeData.value from edit', resumeData.value)
+
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 const addLanguage = () => {
   resumeData.value.languages.push({ value: '', level: '' });
 };
 
-const updateLanguageLevel = (langIndex) => {
-  resumeData.value.languages[langIndex].level = '';
-};
-
-const getLanguageLevels = (language) => {
-  const lang = languagesOptions.find(l => l.value === language);
-  return lang ? lang.levels : [];
-};
-
 const addEducation = () => {
   resumeData.value.education.push({
     institution: '',
     degree: '',
-    startDate: null,
-    endDate: null,
-    showStartDatePicker: false,
-    showEndDatePicker: false
+    startDate: '',
+    endDate: ''
   });
 };
 
 const removeEducation = (index) => {
-  resumeData.value.education.splice(index, 1);
-};
-
-const openDatePicker = (index, type) => {
-  if (type === 'start') {
-    resumeData.value.education[index].showStartDatePicker = true;
-  } else if (type === 'end') {
-    resumeData.value.education[index].showEndDatePicker = true;
-  }
-};
-
-const closeDatePicker = (index, type) => {
-  if (type === 'start') {
-    resumeData.value.education[index].showStartDatePicker = false;
-  } else if (type === 'end') {
-    resumeData.value.education[index].showEndDatePicker = false;
+  if (resumeData.value.education.length > 1) {
+    resumeData.value.education.splice(index, 1);
   }
 };
 
@@ -360,53 +249,86 @@ const addExperience = () => {
 };
 
 const removeExperience = (index) => {
-  resumeData.value.experience.splice(index, 1);
+  if (resumeData.value.experience.length > 1) {
+    resumeData.value.experience.splice(index, 1);
+  }
 };
 
-const phoneRule = (value) => {
-  const regex = new RegExp(phonePattern);
-  return regex.test(value) || 'Invalid phone number format';
+const updateLanguageLevel = (langIndex) => {
+  const selectedLanguage = resumeData.value.languages[langIndex].value;
+  const selectedLanguageObj = languagesOptions.find(l => l.value === selectedLanguage);
+  if (selectedLanguageObj) {
+    // Use reactive or ref to update the property
+    resumeData.value.languages[langIndex].level = selectedLanguageObj.levels[0].value;
+  }
+};
+
+
+
+const getLanguageLevels = (language) => {
+  const selectedLanguage = languagesOptions.find(l => l.value === language);
+  return selectedLanguage ? selectedLanguage.levels.map(l => l) : [];
+};
+
+
+const pickerOptions = {
+  disabledDate(time) {
+    return time.getTime() > Date.now();
+  }
+};
+
+const cancelChanges = () => {
+  router.push('/resume-list');
 };
 </script>
 
-<style scoped>
+<style>
 .page-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background-color: #f5f5f5;
+  max-width: 700px;
+  margin: auto;
 }
 
 .form-container {
-  width: 100%;
-  max-width: 800px;
-  padding: 20px;
+  padding: 30px;
 }
 
-.language-group,
-.education-group,
-.experience-group {
+.sub-title {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.language-row, .education-row, .experience-row {
+  margin-bottom: 20px;
+}
+
+.el-card__header {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.language-select,
-.level-select {
-  flex: 1;
+.el-card-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
 }
 
-.v-card-title,
-.v-card-subtitle {
-  text-align: center;
+.form-aligned-right .el-form-item__content {
+  text-align: right;
 }
 
-.v-btn {
-  margin-top: 15px;
-  flex: 2;
+.datePicker {
+  display: flex;
+  justify-content: space-between;
 }
-.mb-4 {
-  margin-bottom: 16px;
+
+.headline{
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 26px;
+  display: flex;
+  justify-content: center; 
+  color: red;
 }
 </style>

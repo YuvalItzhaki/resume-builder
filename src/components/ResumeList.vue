@@ -1,63 +1,75 @@
 <template>
   <div>
-    <table>
-      <thead>
-        <tr>
-          <th v-for="header in headers" :key="header">{{ header }}</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="item in items" :key="item._id">
-          <td>{{ item._id }}</td>
-          <td>
-            <ul>
-              <li>{{ item.profile?.name }}</li>
-              <li>{{ item.profile?.title }}</li>
-            </ul>
-          </td>
-          <td>
-            <ul>
-              <li>{{ item.contact?.email }}</li>
-              <li>{{ item.contact?.linkedin }}</li>
-            </ul>
-          </td>
-          <td>
-            <ul>
-              <li v-for="(education, index) in item.education ?? []" :key="index">
-                {{ education.institution }} - {{ education.degree }}
-              </li>
-            </ul>
-          </td>
-          <td>
-            <ul>
-              <li v-for="(skill, index) in item.tech_skills ?? []" :key="index">{{ skill }}</li>
-            </ul>
-          </td>
-          <td>
-            <ul>
-              <li v-for="(language, index) in item.languages ?? []" :key="index">
-                {{ language.value }} ({{ language.level }})
-              </li>
-            </ul>
-          </td>
-          <td>
-            <ul>
-              <li v-for="(exp, index) in item.experience ?? []" :key="index">
-                {{ exp.title }} at {{ exp.company }}
-              </li>
-            </ul>
-          </td>
-          <td>{{ item.summary }}</td>
-          <td>
-            <div class="action-buttons">
-              <button @click="editItem(item)">Edit</button>
-              <button @click="deleteItem(item)">Delete</button>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <el-table :data="items" style="width: 100%">
+      <el-table-column label="Id">
+        <template #default="scope">
+          {{ scope.row._id }}
+        </template>
+      </el-table-column>
+      <el-table-column label="Profile">
+        <template #default="scope">
+          <ul>
+            <li>{{ scope.row.profile?.name }}</li>
+            <li>{{ scope.row.profile?.title }}</li>
+          </ul>
+        </template>
+      </el-table-column>
+      <el-table-column label="Contact">
+        <template #default="scope">
+          <ul>
+            <li>{{ scope.row.contact?.email }}</li>
+            <li>{{ scope.row.contact?.linkedin }}</li>
+          </ul>
+        </template>
+      </el-table-column>
+      <el-table-column label="Education">
+        <template #default="scope">
+          <ul>
+            <li v-for="(education, index) in scope.row.education ?? []" :key="index">
+              {{ education.institution }} - {{ education.degree }}
+            </li>
+          </ul>
+        </template>
+      </el-table-column>
+      <el-table-column label="Tech Skills">
+        <template #default="scope">
+          <ul>
+            <li v-for="(skill, index) in scope.row.tech_skills ?? []" :key="index">{{ skill }}</li>
+          </ul>
+        </template>
+      </el-table-column>
+      <el-table-column label="Languages">
+        <template #default="scope">
+          <ul>
+            <li v-for="(language, index) in scope.row.languages ?? []" :key="index">
+              {{ language.value }} ({{ language.level }})
+            </li>
+          </ul>
+        </template>
+      </el-table-column>
+      <el-table-column label="Experience">
+        <template #default="scope">
+          <ul>
+            <li v-for="(exp, index) in scope.row.experience ?? []" :key="index">
+              {{ exp.title }} at {{ exp.company }}
+            </li>
+          </ul>
+        </template>
+      </el-table-column>
+      <el-table-column label="Summary">
+        <template #default="scope">
+          {{ scope.row.summary }}
+        </template>
+      </el-table-column>
+      <el-table-column label="Actions">
+        <template #default="scope">
+          <div class="action-buttons">
+            <el-button type="primary" @click="editItem(scope.row)">Edit</el-button>
+            <el-button type="danger" @click="deleteItem(scope.row)">Delete</el-button>
+          </div>
+        </template>
+      </el-table-column>
+    </el-table>
   </div>
 </template>
 
@@ -111,31 +123,8 @@ onMounted(() => {
 </script>
 
 <style scoped>
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th, td {
-  border: 1px solid #ddd;
-  padding: 8px;
-}
-
-th {
-  background-color: #f2f2f2;
-}
-
-button {
-  background-color: #4CAF50;
-  color: white;
-  padding: 5px 10px;
-  border: none;
-  cursor: pointer;
+.el-button {
   margin-right: 5px; /* Add space between buttons */
-}
-
-button:hover {
-  background-color: #45a049;
 }
 
 .action-buttons {

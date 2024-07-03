@@ -46,8 +46,10 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
+import { useResumeStore } from '../stores/resumeStore';
+
 import axios from 'axios';
 
 import ProfileSection from './ProfileSection.vue';
@@ -58,8 +60,23 @@ import ExperienceSection from './ExperienceSection.vue';
 import LanguagesSection from './LanguagesSection.vue';
 import EducationSection from './EducationSection.vue';
 
-const route = useRoute();
-const resume = ref({ profile: { name: '', title: '' } });
+// const route = useRoute();
+// const resumeStore = useResumeStore();
+
+// const fetchResumeData = async (id) => {
+//   await resumeStore.fetchResumeById(id);
+// };
+
+// onMounted(() => {
+//   fetchResumeData(route.params.id);
+// });
+
+// watch(
+//   () => route.params.id,
+//   (newId) => {
+//     fetchResumeData(newId);
+//   }
+// );
 
 const sidebarComponents = ref([
   { name: 'Profile', component: ProfileSection, id: 'profile', data: {} },
@@ -111,36 +128,36 @@ function dropItem(target) {
   targetIndex.value = null;
 }
 
-onMounted(async () => {
-  const id = route.params.id;
-  try {
-    const response = await axios.get(`http://localhost:5001/api/resumes/${id}`);
-    resume.value = response.data[0];
+// onMounted(async () => {
+//   const id = route.params.id;
+//   try {
+//     const response = await axios.get(`http://localhost:5001/api/resumes/${id}`);
+//     resume.value = response.data[0];
 
-    // Detailed logging
-    // console.log('Fetched resume data:', resumeData);
+//     // Detailed logging
+//     // console.log('Fetched resume data:', resumeData);
 
-    // // Update the sidebar and main components with the fetched data
-    // sidebarComponents.value.find(item => item.id === 'profile').data = resumeData.profile || {};
-    // sidebarComponents.value.find(item => item.id === 'contact').data = resumeData.contact || {};
-    // sidebarComponents.value.find(item => item.id === 'skills').data = resumeData.tech_skills || {};
-    // sidebarComponents.value.find(item => item.id === 'languages').data = resumeData.languages || {};
-    // sidebarComponents.value.find(item => item.id === 'education').data = resumeData.education || {};
-    // mainComponents.value.find(item => item.id === 'summary').data = resumeData.summary || {};
-    // mainComponents.value.find(item => item.id === 'experience').data = resumeData.experience || {};
+//     // // Update the sidebar and main components with the fetched data
+//     // sidebarComponents.value.find(item => item.id === 'profile').data = resumeData.profile || {};
+//     // sidebarComponents.value.find(item => item.id === 'contact').data = resumeData.contact || {};
+//     // sidebarComponents.value.find(item => item.id === 'skills').data = resumeData.tech_skills || {};
+//     // sidebarComponents.value.find(item => item.id === 'languages').data = resumeData.languages || {};
+//     // sidebarComponents.value.find(item => item.id === 'education').data = resumeData.education || {};
+//     // mainComponents.value.find(item => item.id === 'summary').data = resumeData.summary || {};
+//     // mainComponents.value.find(item => item.id === 'experience').data = resumeData.experience || {};
 
-    // console.log('Fetched contact:', resumeData[0].contact);
+//     // console.log('Fetched contact:', resumeData[0].contact);
 
 
 
-    // // Logging after assignment
-    // console.log('Sidebar components after data assignment:', sidebarComponents.value);
-    // console.log('Main components after data assignment:', mainComponents.value);
+//     // // Logging after assignment
+//     // console.log('Sidebar components after data assignment:', sidebarComponents.value);
+//     // console.log('Main components after data assignment:', mainComponents.value);
 
-  } catch (error) {
-    console.error('Error fetching data:', error);
-  }
-});
+//   } catch (error) {
+//     console.error('Error fetching data:', error);
+//   }
+// });
 </script>
 
 <style scoped>

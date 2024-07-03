@@ -2,7 +2,7 @@
   <template>
     <div>
       <h1>Dashboard</h1>
-      <button @click="navigateToCreateResume">Create New Resume</button>
+      <!-- <button @click="navigateToCreateResume">Create New Resume</button> -->
     </div>
   </template>
   

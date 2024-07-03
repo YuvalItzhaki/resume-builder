@@ -16,7 +16,6 @@ export const useProfileStore = defineStore('profileStore', {
       if (!resumeStore.resumeData) {
         await resumeStore.fetchResumeById(id);
         this.profile = resumeStore.resumeData[0]?.profile || {};
-        console.log('this.profile:', this.profile)
       }
     },
 

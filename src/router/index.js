@@ -6,9 +6,7 @@ import Register from '../views/Register.vue';
 import CreateResume from '../views/CreateResume.vue';
 import ResumePreview from '../views/ResumePreview.vue';
 import MyResume from '../views/MyResume.vue';
-import EditResume from '../views/EditResume.vue'
-
-
+import EditResume from '../views/EditResume.vue';
 
 
 const routes = [
@@ -36,7 +34,6 @@ const routes = [
     path: '/resume-preview/:id',
     name: 'ResumePreview',
     component: ResumePreview,
-    // props: route => ({ data: route.query.data ? JSON.parse(route.query.data) : null })
   },
   {
     path: '/resume-list',

@@ -5,6 +5,7 @@ import { createPinia } from 'pinia';
 import vuetify from './plugins/vuetify';
 import router from './router/index';
 import ElementPlus from 'element-plus';
+import 'element-plus/dist/index.css';
 import VueSelect from 'vue-select';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
