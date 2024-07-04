@@ -3,131 +3,156 @@
     <el-form :model="resumeData" ref="form" @submit.native.prevent="handleSaveAndPreviewResume" label-position="top" class="form-aligned-right">
       <el-card class="form-container">
         <div slot="header">
-          <span class="headline">Edit Existing Resume Form</span>
+          <span class="headline">Edit Existing Resume</span>
         </div>
 
-        <el-form-item label="Name" :rules="[{ required: true, message: 'Name is required', trigger: 'blur' }]">
-          <el-input v-model="resumeData.profile.name"></el-input>
-        </el-form-item>
-
-        <el-form-item label="Title" :rules="[{ required: true, message: 'Title is required', trigger: 'blur' }]">
-          <el-input v-model="resumeData.profile.title"></el-input>
-        </el-form-item>
-
-        <el-divider></el-divider>
-
-        <div class="sub-title">Contact</div>
-
-        <el-form-item label="Email" :rules="[{ required: true, type: 'email', message: 'Email is required', trigger: 'blur' }]">
-          <el-input v-model="resumeData.contact.email"></el-input>
-        </el-form-item>
-
-        <el-form-item label="Phone" :rules="[{ required: true, validator: phoneRule, trigger: 'blur' }]">
-          <el-input v-model="resumeData.contact.phone" placeholder="+14155552671"></el-input>
-        </el-form-item>
-        <el-alert v-if="phoneError" type="error">{{ phoneError }}</el-alert>
-
-        <el-form-item label="LinkedIn" :rules="[{ required: true, message: 'LinkedIn is required', trigger: 'blur' }]">
-          <el-input v-model="resumeData.contact.linkedin"></el-input>
-        </el-form-item>
-
-        <el-form-item label="GitHub" :rules="[{ required: true, message: 'GitHub is required', trigger: 'blur' }]">
-          <el-input v-model="resumeData.contact.github"></el-input>
-        </el-form-item>
-
-        <el-divider></el-divider>
-
-        <div class="sub-title">Tech Skills</div>
-
-        <el-form-item label="Tech Skills" :rules="[{ required: true, message: 'Tech Skills are required', trigger: 'change' }]">
-          <el-select v-model="resumeData.tech_skills" multiple filterable>
-            <el-option v-for="skill in techSkillsOptions" :key="skill.value" :label="skill.label" :value="skill.value"></el-option>
-          </el-select>
-        </el-form-item>
-
-        <el-divider></el-divider>
-
-        <div class="sub-title">Languages</div>
-
-        <div v-for="(lang, langIndex) in resumeData.languages" :key="langIndex" class="language-row">
-          <el-form-item :label="'Language ' + (langIndex + 1)">
-            <el-select v-model="lang.value" filterable @change="updateLanguageLevel(langIndex)">
-              <el-option v-for="option in languagesOptions" :key="option.value" :label="option.label" :value="option.value"></el-option>
-            </el-select>
+         <!-- Profile Section -->
+         <div v-show="currentPage === 'profile'">
+          <div class="sub-title">Profile</div>
+          <el-form-item label="Name" :rules="[{ required: true, message: 'Name is required', trigger: 'blur' }]">
+            <el-input v-model="resumeData.profile.name"></el-input>
           </el-form-item>
 
-          <el-form-item :label="'Proficiency Level ' + (langIndex + 1)">
-            <el-select v-model="lang.level" filterable>
-              <el-option v-for="level in getLanguageLevels(lang.value)" :key="level" :label="level" :value="level"></el-option>
+          <el-form-item label="Title" :rules="[{ required: true, message: 'Title is required', trigger: 'blur' }]">
+            <el-input v-model="resumeData.profile.title"></el-input>
+          </el-form-item>
+        </div>
+
+        <!-- <el-divider></el-divider> -->
+
+        <!-- Contact Section -->
+        <div v-show="currentPage === 'contact'">
+          <div class="sub-title">Contact</div>
+          <el-form-item label="Email" :rules="[{ required: true, type: 'email', message: 'Email is required', trigger: 'blur' }]">
+            <el-input v-model="resumeData.contact.email"></el-input>
+          </el-form-item>
+
+          <el-form-item label="Phone" :rules="[{ required: true, validator: phoneRule, trigger: 'blur' }]">
+            <el-input v-model="resumeData.contact.phone" placeholder="+14155552671"></el-input>
+          </el-form-item>
+          <el-alert v-if="phoneError" type="error">{{ phoneError }}</el-alert>
+
+          <el-form-item label="LinkedIn" :rules="[{ required: true, message: 'LinkedIn is required', trigger: 'blur' }]">
+            <el-input v-model="resumeData.contact.linkedin"></el-input>
+          </el-form-item>
+
+          <el-form-item label="GitHub" :rules="[{ required: true, message: 'GitHub is required', trigger: 'blur' }]">
+            <el-input v-model="resumeData.contact.github"></el-input>
+          </el-form-item>
+        </div>
+
+        <!-- <el-divider></el-divider> -->
+
+        <!-- Tech Skills Section -->
+        <div v-show="currentPage === 'tech-skills'">
+          <div class="sub-title">Tech Skills</div>
+          <el-form-item label="Tech Skills" :rules="[{ required: true, message: 'Tech Skills are required', trigger: 'change' }]">
+            <el-select v-model="resumeData.tech_skills" multiple filterable>
+              <el-option v-for="skill in techSkillsOptions" :key="skill.value" :label="skill.label" :value="skill.value"></el-option>
             </el-select>
           </el-form-item>
         </div>
-        <el-button type="text" @click="addLanguage">Add Language</el-button>
 
-        <el-divider></el-divider>
+        <!-- <el-divider></el-divider> -->
 
-        <div class="sub-title">Education</div>
-
-        <div v-for="(edu, index) in resumeData.education" :key="index" class="education-row">
-          <el-form-item :label="'Institution ' + (index + 1)">
-            <el-input v-model="edu.institution"></el-input>
-          </el-form-item>
-
-          <el-form-item :label="'Degree ' + (index + 1)">
-            <el-input v-model="edu.degree"></el-input>
-          </el-form-item>
-          <div class="datePicker">
-            <el-form-item label="Start Date">
-              <el-date-picker v-model="edu.startDate" type="date" format="YYYY-MM-DD" value-format="YYYY-MM-DD" :picker-options="pickerOptions"></el-date-picker>
+        <!-- Languages Section -->
+        <div v-show="currentPage === 'languages'">
+          <div class="sub-title">Languages</div>
+          <div v-for="(lang, langIndex) in resumeData.languages" :key="langIndex" class="language-row">
+            <el-form-item :label="'Language ' + (langIndex + 1)">
+              <el-select v-model="lang.value" filterable @change="updateLanguageLevel(langIndex)">
+                <el-option v-for="option in languagesOptions" :key="option.value" :label="option.label" :value="option.value"></el-option>
+              </el-select>
             </el-form-item>
-            <el-form-item label="End Date">
-              <el-date-picker v-model="edu.endDate" type="date" format="YYYY-MM-DD" value-format="YYYY-MM-DD" :picker-options="pickerOptions"></el-date-picker>
+
+            <el-form-item :label="'Proficiency Level ' + (langIndex + 1)">
+              <el-select v-model="lang.level" filterable>
+                <el-option v-for="level in getLanguageLevels(lang.value)" :key="level" :label="level" :value="level"></el-option>
+              </el-select>
             </el-form-item>
           </div>
-
-          <el-button type="text" @click="removeEducation(index)">Remove</el-button>
+          <el-button type="text" @click="addLanguage">Add Language</el-button>
         </div>
-        <el-button type="text" @click="addEducation">Add Education</el-button>
 
-        <el-divider></el-divider>
+        <!-- <el-divider></el-divider> -->
 
-        <div class="sub-title">Experience</div>
-
-        <div v-for="(exp, index) in resumeData.experience" :key="index" class="experience-row">
-          <el-form-item :label="'Title ' + (index + 1)">
-            <el-input v-model="exp.title"></el-input>
-          </el-form-item>
-
-          <el-form-item :label="'Company ' + (index + 1)">
-            <el-input v-model="exp.company"></el-input>
-          </el-form-item>
-          <div class="datePicker">
-            <el-form-item label="Start Date">
-              <el-date-picker v-model="exp.startDate" type="date" format="YYYY-MM-DD" value-format="YYYY-MM-DD" :picker-options="pickerOptions"></el-date-picker>
+        <!-- Education Section -->
+        <div v-show="currentPage === 'education'">
+          <div class="sub-title">Education</div>
+          <div v-for="(edu, index) in resumeData.education" :key="index" class="education-row">
+            <el-form-item :label="'Institution ' + (index + 1)">
+              <el-input v-model="edu.institution"></el-input>
             </el-form-item>
-            <el-form-item label="End Date">
-              <el-date-picker v-model="exp.endDate" type="date" format="YYYY-MM-DD" value-format="YYYY-MM-DD" :picker-options="pickerOptions"></el-date-picker>
+
+            <el-form-item :label="'Degree ' + (index + 1)">
+              <el-input v-model="edu.degree"></el-input>
             </el-form-item>
+            <div class="datePicker">
+              <el-form-item label="Start Date">
+                <el-date-picker v-model="edu.startDate" type="date" format="YYYY-MM-DD" value-format="YYYY-MM-DD" :picker-options="pickerOptions"></el-date-picker>
+              </el-form-item>
+              <el-form-item label="End Date">
+                <el-date-picker v-model="edu.endDate" type="date" format="YYYY-MM-DD" value-format="YYYY-MM-DD" :picker-options="pickerOptions"></el-date-picker>
+              </el-form-item>
+            </div>
+
+            <el-button type="text" @click="removeEducation(index)">Remove</el-button>
           </div>
-          <el-form-item :label="'Duties ' + (index + 1)">
-            <el-input type="textarea" v-model="exp.duties"></el-input>
-          </el-form-item>
-
-          <el-button type="text" @click="removeExperience(index)">Remove</el-button>
+          <el-button type="text" @click="addEducation">Add Education</el-button>
         </div>
-        <el-button type="text" @click="addExperience">Add Experience</el-button>
 
-        <el-divider></el-divider>
+        <!-- <el-divider></el-divider> -->
 
-        <div class="sub-title">Profile</div>
+        <!-- Experience Section -->
+        <div v-show="currentPage === 'experience'">
+          <div class="sub-title">Experience</div>
+          <div v-for="(exp, index) in resumeData.experience" :key="index" class="experience-row">
+            <el-form-item :label="'Title ' + (index + 1)">
+              <el-input v-model="exp.title"></el-input>
+            </el-form-item>
 
-        <el-form-item label="Summary" :rules="[{ required: true, message: 'Summary is required', trigger: 'blur' }]">
-          <el-input type="textarea" v-model="resumeData.summary"></el-input>
-        </el-form-item>
+            <el-form-item :label="'Company ' + (index + 1)">
+              <el-input v-model="exp.company"></el-input>
+            </el-form-item>
+            <div class="datePicker">
+              <el-form-item label="Start Date">
+                <el-date-picker v-model="exp.startDate" type="date" format="YYYY-MM-DD" value-format="YYYY-MM-DD" :picker-options="pickerOptions"></el-date-picker>
+              </el-form-item>
+              <el-form-item label="End Date">
+                <el-date-picker v-model="exp.endDate" type="date" format="YYYY-MM-DD" value-format="YYYY-MM-DD" :picker-options="pickerOptions"></el-date-picker>
+              </el-form-item>
+            </div>
+            <el-form-item :label="'Duties ' + (index + 1)">
+              <el-input type="textarea" v-model="exp.duties"></el-input>
+            </el-form-item>
 
+            <el-button type="text" @click="removeExperience(index)">Remove</el-button>
+          </div>
+          <el-button type="text" @click="addExperience">Add Experience</el-button>
+        </div>
+
+        <!-- <el-divider></el-divider> -->
+
+        <!-- Summary Section -->
+        <div v-show="currentPage === 'summary'">
+          <div class="sub-title">Summary</div>
+          <el-form-item label="Summary" :rules="[{ required: true, message: 'Summary is required', trigger: 'blur' }]">
+            <el-input type="textarea" v-model="resumeData.summary"></el-input>
+          </el-form-item>
+          </div>
+
+        <!-- Pagination Buttons -->
+        <div class="pagination-buttons">
+          <el-button type="default" @click="previousSection" :disabled="currentPageIndex === 0">Previous</el-button>
+          <el-button type="default" @click="nextSection" :disabled="currentPageIndex === sections.length - 1">Next</el-button>
+        </div>
+
+         <!-- Form Actions -->
         <el-card-actions>
+          <div class="form-actions" v-if="currentPageIndex === sections.length - 1">
           <el-button type="primary" native-type="submit">Update & Preview Resume</el-button>
           <el-button type="default" @click="cancelChanges">Cancel</el-button>
+        </div>
         </el-card-actions>
       </el-card>
     </el-form>
@@ -135,7 +160,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { techSkillsOptions, languagesOptions } from '../data/data.json';
 import axios from 'axios';
@@ -174,6 +199,9 @@ const resumeData = ref({
   summary: ''
 });
 
+const currentPage = ref('profile');
+const sections = ref(['profile', 'contact', 'tech-skills', 'languages', 'education', 'experience', 'summary']);
+const currentPageIndex = computed(() => sections.value.indexOf(currentPage.value));
 const phonePattern = '^\\+?[1-9]\\d{1,14}$';
 const phoneError = ref('');
 const id = route.params.id;
@@ -263,13 +291,10 @@ const updateLanguageLevel = (langIndex) => {
   }
 };
 
-
-
 const getLanguageLevels = (language) => {
   const selectedLanguage = languagesOptions.find(l => l.value === language);
   return selectedLanguage ? selectedLanguage.levels.map(l => l) : [];
 };
-
 
 const pickerOptions = {
   disabledDate(time) {
@@ -280,6 +305,19 @@ const pickerOptions = {
 const cancelChanges = () => {
   router.push('/resume-list');
 };
+
+const nextSection = () => {
+  if (currentPageIndex.value < sections.value.length - 1) {
+    currentPage.value = sections.value[currentPageIndex.value + 1];
+  }
+};
+
+const previousSection = () => {
+  if (currentPageIndex.value > 0) {
+    currentPage.value = sections.value[currentPageIndex.value - 1];
+  }
+};
+
 </script>
 
 <style>
@@ -330,5 +368,17 @@ const cancelChanges = () => {
   display: flex;
   justify-content: center; 
   color: red;
+}
+
+.pagination-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
 }
 </style>

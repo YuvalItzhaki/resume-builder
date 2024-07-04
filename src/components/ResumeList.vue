@@ -1,11 +1,11 @@
 <template>
-  <div>
+  <div class="page-container1">
     <el-table :data="items" style="width: 100%">
-      <el-table-column label="Id">
+      <!-- <el-table-column label="Id">
         <template #default="scope">
           {{ scope.row._id }}
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="Profile">
         <template #default="scope">
           <ul>
@@ -38,7 +38,7 @@
           </ul>
         </template>
       </el-table-column>
-      <el-table-column label="Languages">
+      <!-- <el-table-column label="Languages">
         <template #default="scope">
           <ul>
             <li v-for="(language, index) in scope.row.languages ?? []" :key="index">
@@ -46,7 +46,7 @@
             </li>
           </ul>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="Experience">
         <template #default="scope">
           <ul>
@@ -56,14 +56,15 @@
           </ul>
         </template>
       </el-table-column>
-      <el-table-column label="Summary">
+      <!-- <el-table-column label="Summary">
         <template #default="scope">
           {{ scope.row.summary }}
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="Actions">
         <template #default="scope">
           <div class="action-buttons">
+            <el-button type="default" @click="handlePreviewResume(scope.row)">Preview</el-button>
             <el-button type="primary" @click="editItem(scope.row)">Edit</el-button>
             <!-- <el-button type="danger" @click="deleteItem(scope.row)">Delete</el-button> -->
             <el-button type="danger" plain @click="centerDialogVisible = true">
@@ -140,9 +141,36 @@ async function deleteItem(item) {
 onMounted(() => {
   fetchData();
 });
+
+const handlePreviewResume = async (item) => {
+  try {
+    const id = item._id;
+     const getResponse = await axios.get(`http://localhost:5001/api/resumes/${id}`);
+     Object.assign(items.value, getResponse.data[0]);
+     router.push({
+      path: `/resume-preview/${id}`,
+      state: { resumeData: items.value }
+      
+    });
+      console.log('resumeData.value from edit', items.value)
+
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 </script>
 
 <style scoped>
+
+.page-container1 {
+  max-width: 1700px;
+  margin: auto;
+  height: calc(100vh - 20px); /* Adjust for header or other content */
+  padding: 10px;
+  box-sizing: border-box;
+}
+
 .el-button {
   margin-right: 5px; /* Add space between buttons */
 }
