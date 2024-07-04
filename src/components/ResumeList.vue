@@ -65,7 +65,27 @@
         <template #default="scope">
           <div class="action-buttons">
             <el-button type="primary" @click="editItem(scope.row)">Edit</el-button>
-            <el-button type="danger" @click="deleteItem(scope.row)">Delete</el-button>
+            <!-- <el-button type="danger" @click="deleteItem(scope.row)">Delete</el-button> -->
+            <el-button type="danger" plain @click="centerDialogVisible = true">
+              Delete
+            </el-button>
+
+            <el-dialog
+              v-model="centerDialogVisible"
+              title="Warning"
+              width="500"
+              align-center
+            >
+              <span>Resume will be deleted permanently</span>
+              <template #footer>
+                <div class="dialog-footer">
+                  <el-button @click="centerDialogVisible = false">Cancel</el-button>
+                  <el-button type="primary" @click="centerDialogVisible = false; deleteItem(scope.row)">
+                    Confirm
+                  </el-button>
+                </div>
+              </template>
+            </el-dialog>
           </div>
         </template>
       </el-table-column>
@@ -80,6 +100,7 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter();
 const items = ref([]);
+const centerDialogVisible = ref(false);
 
 const headers = ref([
   'Id', 'Profile', 'Contact', 'Education', 'Tech Skills', 'Languages', 'Experience', 'Summary'
@@ -107,7 +128,6 @@ async function editItem(item) {
 
 async function deleteItem(item) {
   const id = item._id;
-  console.log('Delete item:', id);
   try {
     await axios.delete(`http://localhost:5001/api/resumes/${id}`);
     items.value = items.value.filter(i => i._id !== id);
