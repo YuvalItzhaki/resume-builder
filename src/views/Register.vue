@@ -1,98 +1,82 @@
-<!-- src/components/Register.vue -->
-<!-- <template>
-    <v-container>
-      <v-form @submit.prevent="handleSubmit">
-        <v-text-field
-          v-model="formData.email"
-          label="Email"
-          required
-        ></v-text-field>
-        <v-text-field
-          v-model="formData.password"
-          label="Password"
-          type="password"
-          required
-        ></v-text-field>
-        <v-btn type="submit" color="primary">Register</v-btn>
-      </v-form>
-    </v-container>
-  </template>
-  
-  <script setup>
-  import { reactive } from 'vue';
-  import { useRouter } from 'vue-router';
-  import api from '../services/api';
-  
-  const router = useRouter();
-  const formData = reactive({
-    email: '',
-    password: ''
-  });
-  
-  const handleSubmit = async () => {
-    try {
-      await api.post('/register', formData);
-      router.push('/login');
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  </script>
-  
-  <style scoped>
-  </style>
-   -->
-   <!-- src/views/Register.vue -->
 <template>
-    <div>
-      <h1>Register</h1>
-      <form @submit.prevent="register">
-        <div>
-          <label for="email">Email:</label>
-          <input type="email" id="email" v-model="email" required />
-        </div>
-        <div>
-          <label for="password">Password:</label>
-          <input type="password" id="password" v-model="password" required />
-        </div>
-        <button type="submit">Register</button>
-      </form>
+  <div class="page-container">
+    <el-card class="form-container">
+      <div slot="header">
+        <span class="headline">Register</span>
+      </div>
+      <el-form @submit.prevent="register">
+        <el-form-item>
+          <el-input v-model="name" placeholder="Name" type="name" required></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-input v-model="email" placeholder="Email" type="email" required></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-input v-model="password" placeholder="Password" type="password" required></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="register">Register</el-button>
+        </el-form-item>
+      </el-form>
       <div>
         <p>Or register with Google</p>
-        <button @click="registerWithGoogle">Register with Google</button>
+        <el-button type="success" @click="registerWithGoogle">Register with Google</el-button>
       </div>
-    </div>
-  </template>
-  
-  <script setup>
-  import { ref } from 'vue';
-  import axios from 'axios';
-  import { useRouter } from 'vue-router';
-  import { useAuthStore } from '../stores/useAuthStore';
-  
-  const email = ref('');
-  const password = ref('');
-  const router = useRouter();
-  const authStore = useAuthStore();
-  
-  const register = async () => {
-    try {
-      const response = await axios.post('http://localhost:5001/api/users/register', {
-        email: email.value,
-        password: password.value
-      });
-  
-      const token = response.data.token;
-      authStore.setToken(token);
-      router.push('/dashboard');
-    } catch (error) {
-      console.error('Registration failed:', error);
-      // Handle error, show message to user, etc.
-    }
-  };
-  
-  const registerWithGoogle = () => {
-    window.location.href = 'http://localhost:5001/api/auth/google';
-  };
-  </script>
-  
+    </el-card>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue';
+import axios from 'axios';
+import { useRouter } from 'vue-router';
+import { useAuthStore } from '../stores/authStore';
+
+const name = ref('');
+const email = ref('');
+const password = ref('');
+const router = useRouter();
+const authStore = useAuthStore();
+
+const register = async () => {
+  try {
+    const response = await axios.post('http://localhost:5001/api/users/register', {
+      name: name.value,
+      email: email.value,
+      password: password.value
+    });
+
+    // Fetch the current user to update the auth store
+    await authStore.fetchCurrentUser();
+    router.push('/create-resume');
+  } catch (error) {
+    console.error('Registration failed:', error);
+  }
+};
+
+const registerWithGoogle = () => {
+  window.location.href = 'http://localhost:5001/api/auth/google';
+};
+</script>
+
+<style scoped>
+.page-container {
+  font-family: 'Times New Roman', Times, serif;
+  max-width: 700px;
+  margin: auto;
+  padding: 20px;
+}
+
+.form-container {
+  padding: 30px;
+  border-radius: 10px;
+}
+
+.el-input {
+  width: 100%;
+}
+
+.el-button {
+  width: 100%;
+}
+</style>

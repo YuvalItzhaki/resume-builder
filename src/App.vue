@@ -13,6 +13,10 @@
 
 <script setup>
 import Navbar from './components/Navbar.vue';
+import { useAuthStore } from './stores/authStore';
+
+const authStore = useAuthStore();
+authStore.fetchCurrentUser();
 </script>
 
 <style>
