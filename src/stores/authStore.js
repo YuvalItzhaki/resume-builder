@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
 
+axios.defaults.withCredentials = true;
+
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     user: null,
@@ -9,28 +11,34 @@ export const useAuthStore = defineStore('auth', {
     isAuthenticated: (state) => !!state.user,
   },
   actions: {
+    async login(credentials) {
+      try {
+        const response = await axios.post('http://localhost:5001/api/users/login', credentials);
+        this.user = response.data;
+      } catch (error) {
+        console.error('Login failed:', error);
+      }
+    },
+    async register(credentials) {
+      try {
+        const response = await axios.post('http://localhost:5001/api/users/register', credentials);
+        this.user = response.data;
+      } catch (error) {
+        console.error('Registration failed:', error);
+      }
+    },
     async fetchCurrentUser() {
       try {
-        const response = await axios.get('http://localhost:5001/api/auth/user', { withCredentials: true });
-        this.user = response.data.user;
+        const response = await axios.get('http://localhost:5001/api/auth/user');
+        this.user = response.data;
       } catch (error) {
-        if (error.response && error.response.status === 401) {
-          console.log('User is not authenticated'); // Log as an info, not an error
-          this.user = null;
-        } else {
-          console.error('Fetching user failed:', error);
-        }
-      }
-    },
-    async logout() {
-      try {
-        const response = await axios.get('http://localhost:5001/api/auth/logout', { withCredentials: true });
+        console.error('Fetching user failed:', error);
         this.user = null;
-        console.log(response.data.message); // Log the successful logout message
-      } catch (error) {
-        console.error('Logout failed:', error);
       }
     },
-    
+    logout() {
+      this.user = null;
+      axios.post('http://localhost:5001/api/auth/logout');
+    },
   },
 });
