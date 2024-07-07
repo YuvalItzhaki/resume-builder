@@ -17,10 +17,12 @@
         <el-form-item>
           <el-button type="primary" @click="register">Register</el-button>
         </el-form-item>
+        <p>Or</p>
       </el-form>
-      <div>
-        <p>Or register with Google</p>
-        <el-button type="success" @click="registerWithGoogle">Register with Google</el-button>
+      <div class="google-button">
+        <button type="success" @click="registerWithGoogle">
+          <img src="../assets/png@1x/dark/web_dark_rd_ctn@1x.png" alt="Google Sign-In">
+        </button>
       </div>
     </el-card>
   </div>
@@ -78,5 +80,18 @@ const registerWithGoogle = () => {
 
 .el-button {
   width: 100%;
+}
+.google-button{
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+ p{
+  justify-content: center;
+  align-items: center;
+  display: flex;
 }
 </style>
