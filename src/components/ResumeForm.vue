@@ -142,10 +142,13 @@ import { ref, computed, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { techSkillsOptions, languagesOptions } from '../data/data.json';
 import axios from 'axios';
+import { useAuthStore } from '../stores/authStore';
+
 
 const router = useRouter();
 const route = useRoute();
 const form = ref(null);
+const authStore = useAuthStore();
 const resumeData = ref({
   _id: '',
   profile: {
@@ -177,7 +180,8 @@ const resumeData = ref({
       duties: ''
     }
   ],
-  summary: ''
+  summary: '', 
+  userId: ''
 });
 
 const currentPage = ref('profile');
@@ -189,15 +193,22 @@ const id = route.params.id;
 const submitting = ref(false); // Flag to prevent duplicate submissions
 
 onMounted(async () => {
-  if (id) {
-    try {
-      const response = await axios.get(`http://localhost:5001/api/resumes/${id}`);
-      Object.assign(resumeData.value, response.data[0]);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-});
+      try {
+        const response = await axios.get('http://localhost:5001/api/auth/token');
+        const token = response.data.token;
+        if (token) {
+          authStore.user.token = token;
+          // Optionally fetch user details using the token if needed
+          // await authStore.fetchCurrentUser();
+          console.log('Token after fetch:', authStore.user.token);
+        } else {
+          console.error('No token found');
+        }
+      } catch (error) {
+        console.error('Error fetching token:', error);
+      }
+    });
+
 
 const phoneRule = (rule, value, callback) => {
   if (value.match(phonePattern)) {
@@ -215,7 +226,12 @@ const handleSubmit = async () => {
 
   if (form.value.validate()) {
     try {
-      await axios.post(`http://localhost:5001/api/resumes`, resumeData.value);
+      resumeData.value.userId = authStore.user.user._id; 
+      await axios.post('http://localhost:5001/api/resumes', resumeData.value, {
+        headers: {
+          Authorization: `Bearer ${authStore.user.token}`
+        }
+      });
       router.push({ name: 'MyResume' });
     } catch (error) {
       console.error('Error updating resume:', error);
@@ -227,12 +243,22 @@ const handleSubmit = async () => {
   }
 };
 
+
 const handleSaveAndPreviewResume = async () => {
   if (submitting.value) return; // Prevent multiple submissions
   submitting.value = true;
 
   try {
-    await axios.post(`http://localhost:5001/api/resumes`, resumeData.value);
+    // Ensure userId is set
+    resumeData.value.userId = authStore.user.user._id; 
+    console.log('resumeData before POST:', resumeData.value); // Debugging log
+
+    await axios.post(`http://localhost:5001/api/resumes`, resumeData.value, {
+      headers: {
+        Authorization: `Bearer ${authStore.user.token}`
+      }
+    });
+
     const getResponse = await axios.get(`http://localhost:5001/api/resumes`);
     const resumes = getResponse.data;
     if (resumes.length > 0) {
@@ -246,11 +272,12 @@ const handleSaveAndPreviewResume = async () => {
       console.error('No resumes found');
     }
   } catch (error) {
-    console.error(error);
+    console.error('Error saving resume:', error);
   } finally {
     submitting.value = false; // Reset flag after submission
   }
 };
+
 
 const addLanguage = () => {
   resumeData.value.languages.push({ value: '', level: '' });

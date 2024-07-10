@@ -98,10 +98,12 @@
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
+import { useAuthStore } from '../stores/authStore';
 
 const router = useRouter();
 const items = ref([]);
 const centerDialogVisible = ref(false);
+const authStore = useAuthStore();
 
 const headers = ref([
   'Id', 'Profile', 'Contact', 'Education', 'Tech Skills', 'Languages', 'Experience', 'Summary'
@@ -109,7 +111,8 @@ const headers = ref([
 
 async function fetchData() {
   try {
-    const response = await axios.get('http://localhost:5001/api/resumes');
+    const userId = authStore.user.user._id;
+    const response = await axios.get(`http://localhost:5001/api/resumes/user/${userId}`);
     items.value = response.data;
     console.log('Fetched items:', items.value);
   } catch (error) {
