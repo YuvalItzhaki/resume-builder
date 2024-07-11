@@ -15,6 +15,15 @@ export const useAuthStore = defineStore('auth', {
     isAuthenticated: (state) => !!state.user.token,
   },
   actions: {
+    setUser(user) {
+      this.user = user;
+      this.isAuthenticated = true;
+    },
+    logout() {
+      this.user = null;
+      this.isAuthenticated = false;
+    },
+  
     async login(credentials) {
       try {
         const response = await axios.post('http://localhost:5001/api/auth/login', credentials);
@@ -52,5 +61,14 @@ export const useAuthStore = defineStore('auth', {
       this.user = { token: '', user: {} };
       axios.post('http://localhost:5001/api/auth/logout');
     },
+  },
+  persist: {
+    enabled: true,
+    strategies: [
+      {
+        key: 'auth',
+        storage: localStorage,
+      },
+    ],
   },
 });

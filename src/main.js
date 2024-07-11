@@ -11,11 +11,15 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faEnvelope, faPhone, faLink } from '@fortawesome/free-solid-svg-icons';
 import { faLinkedin, faGithub } from '@fortawesome/free-brands-svg-icons';
 import { useAuthStore } from './stores/authStore';
+import piniaPersist from 'pinia-plugin-persist';
+
 
 library.add(faEnvelope, faPhone, faLinkedin, faGithub);
 
 const app = createApp(App);
 const pinia = createPinia();
+pinia.use(piniaPersist);
+
 app.component("v-select", VueSelect)
 app.component('font-awesome-icon', FontAwesomeIcon)
 
