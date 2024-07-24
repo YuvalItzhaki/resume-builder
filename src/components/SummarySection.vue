@@ -1,6 +1,6 @@
 <template>
   <div class="summary-section">
-    <h2>SUMMARY</h2>
+    <!-- <h2>SUMMARY</h2> -->
     <p>{{ summary }}</p>
     <!-- <button @click="editSummary">Edit</button> -->
 
@@ -69,16 +69,16 @@ watch(() => summaryStore.summary, (newSummary) => {
   margin-bottom: 20px;
   font-family: 'Times New Roman', Times, serif;
 }
-h1 {
-  font-size: 34px;
-  font-family: 'Times New Roman', Times, serif;
-  color: white;
-  margin: 10px 0;
+.summary-section h2 {
+  color: #073763;
+  text-align: left;
+  border-radius: 2px 2px 0 0;
 }
-p {
-  font-size: 18px;
+.summary-section p {
+  /* font-size: 12px; */
   color: black;
   font-family: 'Times New Roman', Times, serif;
+  text-align: justify;
 }
 .edit-modal {
   position: fixed;

@@ -1,6 +1,6 @@
 <template>
   <div class="contact-section">
-    <h2>CONTACT</h2>
+    <!-- <h2>CONTACT</h2> -->
     <p>
       <label for="contact-email">
         <font-awesome-icon icon="envelope" />
@@ -114,7 +114,7 @@ watch(
 <style scoped>
 .contact-section {
   padding: 2px;
-  background-color: #f9f9f9;
+  /* background-color: #f9f9f9; */
   border-radius: 2px;
   font-family: 'Times New Roman', Times, serif;
 }

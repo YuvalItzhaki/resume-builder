@@ -1,6 +1,6 @@
 <template>
   <div class="skills-section">
-    <h2>TECH SKILLS</h2>
+    <!-- <h2>TECH SKILLS</h2> -->
     <div class="two-columns">
     <ul>
       <li v-for="skill in techSkills" :key="skill">{{ skill }}</li>

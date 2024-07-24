@@ -1,6 +1,6 @@
 <template>
   <div class="education-section">
-    <h2>EDUCATION</h2>
+    <!-- <h2>EDUCATION</h2> -->
     <ul>
       <li v-for="(edu, index) in education" :key="index" class="education-item">
         <div class="institution-degree">

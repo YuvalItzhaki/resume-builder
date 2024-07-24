@@ -3,12 +3,14 @@
     <div>
       <h1 class="headline">Resume Preview</h1>
       <el-divider></el-divider>
-      <ResumePreview />
+      <ResumeTemplate />
     </div>
   </template>
   
   <script setup>
-  import ResumePreview from '../components/ResumePreview.vue'
+  // import ResumePreview from '../components/ResumePreview.vue'
+  import ResumeTemplate from '../components/ResumeTemplate.vue'
+
 
 
   </script>

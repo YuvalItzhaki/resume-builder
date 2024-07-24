@@ -6,6 +6,9 @@ import CreateResume from '../views/CreateResume.vue';
 import ResumePreview from '../views/ResumePreview.vue';
 import MyResume from '../views/MyResume.vue';
 import EditResume from '../views/EditResume.vue';
+import Legal from '../views/Legal.vue';
+import TermsOfService from '../components/TermsOfService.vue';
+
 
 const routes = [
   {
@@ -47,6 +50,16 @@ const routes = [
     name: 'EditResume',
     component: EditResume,
     meta: { requiresAuth: true }
+  },
+  {
+    path: '/legal-documents',
+    name: 'legalDdocuments',
+    component: Legal,
+  },
+  {
+    path: '/terms',
+    name: 'terms',
+    component: TermsOfService,
   },
 ];
 

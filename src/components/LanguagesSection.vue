@@ -1,6 +1,6 @@
 <template>
     <div class="languages-section">
-      <h2>LANGUAGES</h2>
+      <!-- <h2>LANGUAGES</h2> -->
       <ul>
         <li v-for="language in languages" :key="language"><strong>{{ language.value }}</strong> | {{ language.level }}</li>
       </ul>

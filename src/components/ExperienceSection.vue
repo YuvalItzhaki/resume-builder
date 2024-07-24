@@ -1,6 +1,6 @@
 <template>
   <div class="experience-section">
-    <h2>EXPERIENCE</h2>
+    <!-- <h2>EXPERIENCE</h2> -->
     <div v-for="job in experienceStore.experience" :key="job.title" class="job">
       <h3>{{ job.title }}</h3>
       <p>{{ job.company }} | {{ job.startDate }} - {{ job.endDate }}</p>
@@ -134,6 +134,12 @@ onMounted(() => {
   font-family: 'Times New Roman', Times, serif;
 }
 
+.experience-section h2 {
+  color: #073763;
+  text-align: left;
+  border-radius: 2px 2px 0 0;
+}
+
 .job p, .job h3 {
   font-family: 'Times New Roman', Times, serif;
   margin: 0;
@@ -143,6 +149,7 @@ onMounted(() => {
 .job ul {
   margin-top: 10px;
   padding-left: 20px;
+  text-align: justify;
 }
 
 .job li {

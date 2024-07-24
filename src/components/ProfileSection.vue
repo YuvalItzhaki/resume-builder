@@ -68,9 +68,9 @@ watch(() => profileStore.profile, (newProfile) => {
 
 <style scoped>
 .profile-section {
-  text-align: left;
-  height: 200px;
-  background-color: #073763;
+  /* text-align: center; */
+  /* height: 200px; */
+  /* background-color: #073763; */
   position: relative;
   padding: 20px;
 }
@@ -90,14 +90,14 @@ watch(() => profileStore.profile, (newProfile) => {
   border-radius: 50%;
 }
 h1 {
-  font-size: 34px;
+  font-size: 28px;
   font-family: 'Times New Roman', Times, serif;
-  color: white;
+  /* color: white; */
   margin: 10px 0;
 }
 p {
   font-size: 18px;
-  color: white;
+  /* color: white; */
   font-family: 'Times New Roman', Times, serif;
 }
 .edit-modal {

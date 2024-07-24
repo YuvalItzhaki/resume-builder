@@ -1,6 +1,6 @@
 <template>
   <div class="resume">
-    <aside class="sidebar">
+    <aside class="sidebar" ref="sidebarContent">
       <section
         class="flex flex-col gap-2 p-4 w-300px bg-gray-500/5 rounded overflow-auto"
         @dragover.prevent="dragOver"
@@ -9,7 +9,7 @@
         <div
           v-for="(item, index) in sidebarComponents"
           :key="item.id"
-          class="draggable-component"
+          :class="[getComponentClass(item, 'sidebar'), 'draggable-component']"
           :draggable="true"
           @dragstart="startDrag(item, index, 'sidebar')"
           @dragenter.prevent="dragEnter(index)"
@@ -21,7 +21,7 @@
         </div>
       </section>
     </aside>
-    <main class="main-content">
+    <main class="main-content" ref="mainContent">
       <section
         class="flex flex-col gap-2 p-4 w-300px bg-gray-500/5 rounded overflow-auto"
         @dragover.prevent="dragOver"
@@ -30,7 +30,7 @@
         <div
           v-for="(item, index) in mainComponents"
           :key="item.id"
-          class="draggable-component"
+          :class="[getComponentClass(item, 'main'), 'draggable-component']"
           :draggable="true"
           @dragstart="startDrag(item, index, 'main')"
           @dragenter.prevent="dragEnter(index)"
@@ -43,15 +43,15 @@
       </section>
     </main>
   </div>
+  <div class="button-container">
+    <el-button @click="downloadPDF">Download as PDF</el-button>
+    <el-button @click="downloadWord">Download as Word</el-button>
+  </div>
 </template>
 
+
 <script setup>
-import { ref, watch, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
-import { useResumeStore } from '../stores/resumeStore';
-
-import axios from 'axios';
-
+import { ref } from 'vue';
 import ProfileSection from './ProfileSection.vue';
 import ContactSection from './ContactSection.vue';
 import SkillsSection from './SkillsSection.vue';
@@ -59,24 +59,9 @@ import SummarySection from './SummarySection.vue';
 import ExperienceSection from './ExperienceSection.vue';
 import LanguagesSection from './LanguagesSection.vue';
 import EducationSection from './EducationSection.vue';
-
-// const route = useRoute();
-// const resumeStore = useResumeStore();
-
-// const fetchResumeData = async (id) => {
-//   await resumeStore.fetchResumeById(id);
-// };
-
-// onMounted(() => {
-//   fetchResumeData(route.params.id);
-// });
-
-// watch(
-//   () => route.params.id,
-//   (newId) => {
-//     fetchResumeData(newId);
-//   }
-// );
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+import { Document, Packer, Paragraph, ImageRun } from 'docx';
 
 const sidebarComponents = ref([
   { name: 'Profile', component: ProfileSection, id: 'profile', data: {} },
@@ -128,48 +113,79 @@ function dropItem(target) {
   targetIndex.value = null;
 }
 
-// onMounted(async () => {
-//   const id = route.params.id;
-//   try {
-//     const response = await axios.get(`http://localhost:5001/api/resumes/${id}`);
-//     resume.value = response.data[0];
+const getComponentClass = (item, location) => {
+  console.log(`Component: ${item.name}, Location: ${location}`);
+  if (item.name === 'Profile') {
+    return '';
+  }
+  return location === 'main' ? 'main-font' : 'sidebar-font';
+};
 
-//     // Detailed logging
-//     // console.log('Fetched resume data:', resumeData);
+const downloadPDF = async () => {
+  const buttons = document.querySelector('.button-container');
+  buttons.classList.add('hidden'); // Hide the buttons
 
-//     // // Update the sidebar and main components with the fetched data
-//     // sidebarComponents.value.find(item => item.id === 'profile').data = resumeData.profile || {};
-//     // sidebarComponents.value.find(item => item.id === 'contact').data = resumeData.contact || {};
-//     // sidebarComponents.value.find(item => item.id === 'skills').data = resumeData.tech_skills || {};
-//     // sidebarComponents.value.find(item => item.id === 'languages').data = resumeData.languages || {};
-//     // sidebarComponents.value.find(item => item.id === 'education').data = resumeData.education || {};
-//     // mainComponents.value.find(item => item.id === 'summary').data = resumeData.summary || {};
-//     // mainComponents.value.find(item => item.id === 'experience').data = resumeData.experience || {};
+  const resumeElement = document.querySelector('.resume');
+  const canvas = await html2canvas(resumeElement, { scale: 2 }); // Increase scale for higher quality
 
-//     // console.log('Fetched contact:', resumeData[0].contact);
+  const imgData = canvas.toDataURL('image/png');
+  const pdf = new jsPDF('p', 'mm', 'a4');
+  const pdfWidth = pdf.internal.pageSize.getWidth();
+  const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
+  pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
 
+  pdf.save('resume.pdf');
 
-//     // // Logging after assignment
-//     // console.log('Sidebar components after data assignment:', sidebarComponents.value);
-//     // console.log('Main components after data assignment:', mainComponents.value);
+  buttons.classList.remove('hidden'); // Show the buttons again
+};
 
-//   } catch (error) {
-//     console.error('Error fetching data:', error);
-//   }
-// });
+const downloadWord = async () => {
+  const buttons = document.querySelector('.button-container');
+  buttons.classList.add('hidden'); // Hide the buttons
+
+  const resumeElement = document.querySelector('.resume');
+  const canvas = await html2canvas(resumeElement, { scale: 2 }); // Increase scale for higher quality
+  const imgData = canvas.toDataURL('image/png');
+
+  const doc = new Document({
+    sections: [{
+      children: [
+        new Paragraph({
+          children: [new ImageRun({
+            data: imgData,
+            transformation: {
+              width: canvas.width,
+              height: canvas.height
+            }
+          })]
+        })
+      ]
+    }]
+  });
+
+  const blob = await Packer.toBlob(doc);
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'resume.docx';
+  link.click();
+
+  buttons.classList.remove('hidden'); // Show the buttons again
+};
 </script>
+
 
 <style scoped>
 .resume {
   display: flex;
-  max-width: 900px;
+  max-width: 544px;
+  max-height: 766px;
   margin: 0 auto;
-  border: 1px solid #e0e0e0;
+  /* border: 1px solid #e0e0e0; */
 }
 
 .sidebar {
-  width: 30%;
+  width: 33%;
   padding: 10px;
   background-color: #f9f9f9;
   border-radius: 2px;
@@ -177,16 +193,16 @@ function dropItem(target) {
 }
 
 .main-content {
-  width: 70%;
-  padding: 20px;
-  background-color: white;
+  width: 66%;
+  padding: 10px;
+  /* background-color: white; */
 }
 
 .draggable-component {
-  margin-bottom: 10px;
-  padding: 10px;
+  /* margin-bottom: 10px; */
+  /* padding: 10px; */
   border-radius: 5px;
-  background-color: #f9f9f9;
+  /* background-color: #f9f9f9; */
   cursor: move;
 }
 
@@ -198,4 +214,24 @@ function dropItem(target) {
   border-radius: 5px;
   background-color: #f9f9f9;
 }
+
+.sidebar-font, .sidebar-font * {
+  font-size: 10px; /* Font size for components in sidebar */
+}
+
+.main-font, .main-font * {
+  font-size: 11px; /* Font size for components in main content */
+}
+
+.button-container {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-around;
+}
+
+.hidden {
+  display: none !important;
+}
 </style>
+
+
