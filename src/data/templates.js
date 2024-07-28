@@ -56,7 +56,7 @@ export const templates = {
     sectionTitle: {
       fontSize: '24px',
       fontWeight: 'bold',
-      marginBottom: '10px'
+      marginBottom: '10px',
     },
     content: {
       display: 'flex',
@@ -76,7 +76,10 @@ export const templates = {
       marginBottom: '10px'
     },
     profileSection: {
-      marginBottom: '20px'
+      marginBottom: '20px',
+      backgroundColor: '#073763',
+      color: '#FFFFFF'
+
     }
   }
 };
