@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="button-container">
-      <el-button @click="selectedTemplate = 'modern'">Modern</el-button>
-      <el-button @click="selectedTemplate = 'classic'">Classic</el-button>
+      <el-button @click="switchTemplate('modern')">Modern</el-button>
+      <el-button @click="switchTemplate('classic')">Classic</el-button>
     </div>
     <div class="resume" :style="currentTemplate.resume">
       <header v-if="selectedTemplate === 'modern'" :style="currentTemplate.topbar">
@@ -32,7 +32,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import ProfileSection from './ProfileSection.vue';
 import ContactSection from './ContactSection.vue';
 import SkillsSection from './SkillsSection.vue';
@@ -46,7 +46,9 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { Document, Packer, Paragraph, ImageRun } from 'docx';
 
-const selectedTemplate = ref('classic'); // default template
+// Get stored template or default to 'classic'
+const storedTemplate = localStorage.getItem('selectedTemplate') || 'classic';
+const selectedTemplate = ref(storedTemplate);
 const currentTemplate = computed(() => templates[selectedTemplate.value]);
 
 const getCurrentComponents = (template) => {
@@ -88,10 +90,16 @@ const getCurrentComponents = (template) => {
   }
 };
 
-const components = computed(() => getCurrentComponents(selectedTemplate.value));
+const components = ref(getCurrentComponents(selectedTemplate.value));
 const profileComponent = computed(() => components.value.profile);
 const currentSidebarComponents = computed(() => components.value.sidebar);
 const currentMainComponents = computed(() => components.value.main);
+
+const switchTemplate = (template) => {
+  selectedTemplate.value = template;
+  components.value = getCurrentComponents(template);
+  localStorage.setItem('selectedTemplate', template); // Store selected template
+};
 
 const draggingComponent = ref(null);
 const draggingSource = ref(null);

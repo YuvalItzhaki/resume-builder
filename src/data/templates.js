@@ -16,8 +16,8 @@ export const templates = {
       // boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
     },
     sectionTitle: {
-      fontSize: '36px',
-      fontWeight: 'bold',
+      fontSize: '30px',
+      // fontWeight: 'bold',
       margin: '0'
     },
     content: {
