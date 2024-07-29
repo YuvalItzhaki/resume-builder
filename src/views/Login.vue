@@ -3,9 +3,9 @@
     <button class="login-button" @click="loginWithGoogle">
       <img src="../assets/png@2x/light/web_light_sq_SI@2x.png" alt="Google Sign-In">
     </button>
-    <button class="login-button" @click="loginWithLinkedIn">
+    <!-- <button class="login-button" @click="loginWithLinkedIn">
       <img src="../assets/Retina/Sign-In-Large---Default.png" alt="LinkedIn Sign-In">
-    </button>
+    </button> -->
   </div>
 </template>
 
