@@ -17,6 +17,7 @@
         <el-form-item>
           <el-button type="primary" @click="register">Register</el-button>
         </el-form-item>
+        <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
         <p>Or</p>
       </el-form>
       <div class="google-button">
@@ -24,6 +25,7 @@
           <img src="../assets/png@1x/dark/web_dark_rd_ctn@1x.png" alt="Google Sign-In">
         </button>
       </div>
+      <p>Already have an account? <router-link to="/login">Login</router-link></p>
     </el-card>
   </div>
 </template>
@@ -37,6 +39,7 @@ import { useAuthStore } from '../stores/authStore';
 const name = ref('');
 const email = ref('');
 const password = ref('');
+const errorMessage = ref('');
 const router = useRouter();
 const authStore = useAuthStore();
 
@@ -52,6 +55,11 @@ const register = async () => {
     await authStore.fetchCurrentUser();
     router.push('/create-resume');
   } catch (error) {
+    if (error.response && error.response.data.message) {
+      errorMessage.value = error.response.data.message;
+    } else {
+      errorMessage.value = 'Registration failed';
+    }
     console.error('Registration failed:', error);
   }
 };
@@ -81,7 +89,7 @@ const registerWithGoogle = () => {
 .el-button {
   width: 100%;
 }
-.google-button{
+.google-button {
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -89,9 +97,12 @@ const registerWithGoogle = () => {
   align-items: center;
   display: flex;
 }
- p{
+p {
   justify-content: center;
   align-items: center;
   display: flex;
+}
+.error-message {
+  color: red;
 }
 </style>
