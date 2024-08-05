@@ -1,11 +1,11 @@
 <template>
   <div>
-    <v-btn text @click="navigate('/resume-list')">Resume List</v-btn>
-    <v-btn text @click="navigate('/create-resume')">Resume Form</v-btn>
-    <v-btn v-if="!authStore.isAuthenticated" text @click="navigate('/login')">Sign in</v-btn>
-    <v-btn v-if="!authStore.isAuthenticated" text @click="navigate('/register')">Register</v-btn>
-    <v-btn v-if="authStore.isAuthenticated" text @click="handleLogout">Logout</v-btn>
+    <v-btn v-if="authStore.isAuthenticated" text @click="navigate('/resume-list')">Resume List</v-btn>
+    <v-btn v-if="authStore.isAuthenticated" text @click="navigate('/create-resume')">Resume Form</v-btn>
     <v-btn text @click="navigate('/legal-documents')">Legal Documents</v-btn>
+    <v-btn v-if="!authStore.isAuthenticated" text @click="navigate('/register')">Register</v-btn>
+    <v-btn v-if="!authStore.isAuthenticated" text @click="navigate('/login')">Sign in</v-btn>
+    <v-btn v-if="authStore.isAuthenticated" text @click="handleLogout">Logout</v-btn>
   </div>
 </template>
 
